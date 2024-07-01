@@ -7,7 +7,7 @@ namespace Ofps.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(255)]
+        [MaxLength(2048)]
         public string? Name { get; set; }
 
         [Required]
@@ -18,6 +18,10 @@ namespace Ofps.Models
 
         [Required]
         public DateTime? CreateTime { get; set; }
+
+        [Required]
+        [MaxLength(255)]
+        public string? FileType { get; set; }
 
     }
 }

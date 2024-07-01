@@ -34,6 +34,11 @@ namespace ofps.Migrations
                         .IsRequired()
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("FileType")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<string>("LocalPath")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
