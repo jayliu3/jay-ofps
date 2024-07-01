@@ -6,6 +6,7 @@ import { autocompleteClasses } from '@mui/material/Autocomplete';
 
 // ----------------------------------------------------------------------
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const paper = ({ theme, bgcolor, dropdown }: any) => ({
   ...bgBlur({
     blur: 20,
@@ -31,6 +32,7 @@ export const paper = ({ theme, bgcolor, dropdown }: any) => ({
 
 // ----------------------------------------------------------------------
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const menuItem = (theme: any) => ({
   ...theme.typography.body2,
   padding: theme.spacing(0.75, 1),
@@ -63,7 +65,8 @@ export const menuItem = (theme: any) => ({
 
 // ----------------------------------------------------------------------
 
-export function bgBlur(props: any) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function bgBlur(props: any): any {
   const color = props?.color || '#000000';
   const blur = props?.blur || 6;
   const opacity = props?.opacity || 0.8;
@@ -97,6 +100,7 @@ export function bgBlur(props: any) {
 
 // ----------------------------------------------------------------------
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function bgGradient(props: any) {
   const direction = props?.direction || 'to bottom';
   const startColor = props?.startColor;
@@ -121,6 +125,7 @@ export function bgGradient(props: any) {
 
 // ----------------------------------------------------------------------
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function textGradient(value: any) {
   return {
     background: `-webkit-linear-gradient(${value})`,

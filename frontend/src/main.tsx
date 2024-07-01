@@ -7,9 +7,7 @@ import App from './app';
 
 // ----------------------------------------------------------------------
 
-const root = ReactDOM.createRoot(document.getElementById('root')!);
-
-root.render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <HelmetProvider>
     <BrowserRouter>
       <Suspense>

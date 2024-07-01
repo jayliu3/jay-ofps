@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -16,14 +17,14 @@ import Scrollbar from 'src/components/scrollbar';
 
 // ----------------------------------------------------------------------
 
-export default function AppNewsUpdate({ title, subheader, list, ...other }) {
+export default function AppNewsUpdate({ title, subheader, list, ...other }: any) {
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} />
 
       <Scrollbar>
         <Stack spacing={3} sx={{ p: 3, pr: 0 }}>
-          {list.map((news) => (
+          {list.map((news: any) => (
             <NewsItem key={news.id} news={news} />
           ))}
         </Stack>
@@ -52,7 +53,7 @@ AppNewsUpdate.propTypes = {
 
 // ----------------------------------------------------------------------
 
-function NewsItem({ news }) {
+function NewsItem({ news }: any) {
   const { image, title, description, postedAt } = news;
 
   return (

@@ -1,20 +1,27 @@
-import PropTypes from 'prop-types';
 import { forwardRef, useCallback } from 'react';
 
 import Stack from '@mui/material/Stack';
-import { alpha } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
+import { Theme, alpha } from '@mui/material/styles';
 
 import Iconify from '../iconify';
 
 // ----------------------------------------------------------------------
+interface ColorPickerProps {
+  colors: string[];
+  selected: string | string[];
+  onSelectColor: (color: string | string[]) => void;
+  limit?: number | 'auto';
+  sx?: React.CSSProperties;
+  name?: string
+}
 
-const ColorPicker = forwardRef(
+const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
   ({ colors, selected, onSelectColor, limit = 'auto', sx, ...other }, ref) => {
     const singleSelect = typeof selected === 'string';
 
     const handleSelect = useCallback(
-      (color) => {
+      (color: string) => {
         if (singleSelect) {
           if (color !== selected) {
             onSelectColor(color);
@@ -84,8 +91,8 @@ const ColorPicker = forwardRef(
                   width={hasSelected ? 12 : 0}
                   icon="eva:checkmark-fill"
                   sx={{
-                    color: (theme) => theme.palette.getContrastText(color),
-                    transition: (theme) =>
+                    color: (theme: Theme) => theme.palette.getContrastText(color),
+                    transition: (theme: Theme) =>
                       theme.transitions.create('all', {
                         duration: theme.transitions.duration.shortest,
                       }),
@@ -99,13 +106,5 @@ const ColorPicker = forwardRef(
     );
   }
 );
-
-ColorPicker.propTypes = {
-  colors: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
-  limit: PropTypes.number,
-  onSelectColor: PropTypes.func,
-  selected: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
-  sx: PropTypes.object,
-};
 
 export default ColorPicker;

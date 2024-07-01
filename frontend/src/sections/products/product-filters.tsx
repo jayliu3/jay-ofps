@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -47,7 +48,7 @@ export const COLOR_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function ProductFilters({ openFilter, onOpenFilter, onCloseFilter }) {
+export default function ProductFilters({ openFilter, onOpenFilter, onCloseFilter }: any) {
   const renderGender = (
     <Stack spacing={1}>
       <Typography variant="subtitle2">Gender</Typography>
@@ -77,7 +78,8 @@ export default function ProductFilters({ openFilter, onOpenFilter, onCloseFilter
         name="colors"
         selected={[]}
         colors={COLOR_OPTIONS}
-        onSelectColor={(color) => [].includes(color)}
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        onSelectColor={(color: string | string[]) => ([] as Array<any>).includes(color)}
         sx={{ maxWidth: 38 * 4 }}
       />
     </Stack>

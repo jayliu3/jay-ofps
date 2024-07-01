@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -8,7 +9,7 @@ import Chart, { useChart } from 'src/components/chart';
 
 // ----------------------------------------------------------------------
 
-export default function AppWebsiteVisits({ title, subheader, chart, ...other }) {
+export default function AppWebsiteVisits({ title, subheader, chart, ...other }: any) {
   const { labels, colors, series, options } = chart;
 
   const chartOptions = useChart({
@@ -19,7 +20,7 @@ export default function AppWebsiteVisits({ title, subheader, chart, ...other }) 
       },
     },
     fill: {
-      type: series.map((i) => i.fill),
+      type: series.map((i: any) => i.fill),
     },
     labels,
     xaxis: {
@@ -29,7 +30,7 @@ export default function AppWebsiteVisits({ title, subheader, chart, ...other }) 
       shared: true,
       intersect: false,
       y: {
-        formatter: (value) => {
+        formatter: (value: any) => {
           if (typeof value !== 'undefined') {
             return `${value.toFixed(0)} visits`;
           }

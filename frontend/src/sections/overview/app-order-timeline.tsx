@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import PropTypes from 'prop-types';
 
 import Card from '@mui/material/Card';
@@ -14,7 +15,7 @@ import { fDateTime } from 'src/utils/format-time';
 
 // ----------------------------------------------------------------------
 
-export default function AnalyticsOrderTimeline({ title, subheader, list, ...other }) {
+export default function AnalyticsOrderTimeline({ title, subheader, list, ...other }: any) {
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} />
@@ -29,7 +30,7 @@ export default function AnalyticsOrderTimeline({ title, subheader, list, ...othe
           },
         }}
       >
-        {list.map((item, index) => (
+        {list.map((item: any, index: number) => (
           <OrderItem key={item.id} item={item} lastTimeline={index === list.length - 1} />
         ))}
       </Timeline>
@@ -45,7 +46,7 @@ AnalyticsOrderTimeline.propTypes = {
 
 // ----------------------------------------------------------------------
 
-function OrderItem({ item, lastTimeline }) {
+function OrderItem({ item, lastTimeline }: any) {
   const { type, title, time } = item;
   return (
     <TimelineItem>

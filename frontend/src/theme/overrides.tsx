@@ -3,6 +3,7 @@ import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 
 // ----------------------------------------------------------------------
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function overrides(theme: any) {
   return {
     MuiCssBaseline: {

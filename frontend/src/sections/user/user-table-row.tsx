@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 
@@ -25,10 +26,10 @@ export default function UserTableRow({
   isVerified,
   status,
   handleClick,
-}) {
+}: any) {
   const [open, setOpen] = useState(null);
 
-  const handleOpenMenu = (event) => {
+  const handleOpenMenu = (event: any) => {
     setOpen(event.currentTarget);
   };
 

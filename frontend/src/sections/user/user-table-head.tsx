@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -19,8 +20,8 @@ export default function UserTableHead({
   numSelected,
   onRequestSort,
   onSelectAllClick,
-}) {
-  const onSort = (property) => (event) => {
+}: any) {
+  const onSort = (property: any) => (event: any) => {
     onRequestSort(event, property);
   };
 
@@ -35,7 +36,7 @@ export default function UserTableHead({
           />
         </TableCell>
 
-        {headLabel.map((headCell) => (
+        {headLabel.map((headCell: any) => (
           <TableCell
             key={headCell.id}
             align={headCell.align || 'left'}

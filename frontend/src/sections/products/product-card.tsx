@@ -13,7 +13,8 @@ import { ColorPreview } from 'src/components/color-utils';
 
 // ----------------------------------------------------------------------
 
-export default function ShopProductCard({ product }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function ShopProductCard({ product }: any) {
   const renderStatus = (
     <Label
       variant="filled"

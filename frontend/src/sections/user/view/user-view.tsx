@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 
 import Card from '@mui/material/Card';
@@ -29,7 +30,7 @@ export default function UserPage() {
 
   const [order, setOrder] = useState('asc');
 
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState([] as Array<string>);
 
   const [orderBy, setOrderBy] = useState('name');
 
@@ -37,7 +38,7 @@ export default function UserPage() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const handleSort = (event, id) => {
+  const handleSort = (event: any, id: any) => {
     const isAsc = orderBy === id && order === 'asc';
     if (id !== '') {
       setOrder(isAsc ? 'desc' : 'asc');
@@ -45,7 +46,7 @@ export default function UserPage() {
     }
   };
 
-  const handleSelectAllClick = (event) => {
+  const handleSelectAllClick = (event: any) => {
     if (event.target.checked) {
       const newSelecteds = users.map((n) => n.name);
       setSelected(newSelecteds);
@@ -54,9 +55,9 @@ export default function UserPage() {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
+  const handleClick = (event: any, name: any) => {
     const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
+    let newSelected: any = [];
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
     } else if (selectedIndex === 0) {
@@ -72,16 +73,16 @@ export default function UserPage() {
     setSelected(newSelected);
   };
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (event: any, newPage: any) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
+  const handleChangeRowsPerPage = (event: any) => {
     setPage(0);
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
-  const handleFilterByName = (event) => {
+  const handleFilterByName = (event: any) => {
     setPage(0);
     setFilterName(event.target.value);
   };
@@ -133,7 +134,7 @@ export default function UserPage() {
               <TableBody>
                 {dataFiltered
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
+                  .map((row: any) => (
                     <UserTableRow
                       key={row.id}
                       name={row.name}

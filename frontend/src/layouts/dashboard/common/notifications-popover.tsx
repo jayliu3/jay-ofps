@@ -80,7 +80,8 @@ export default function NotificationsPopover() {
 
   const [open, setOpen] = useState(null);
 
-  const handleOpen = (event) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleOpen = (event: any) => {
     setOpen(event.currentTarget);
   };
 
@@ -192,7 +193,8 @@ NotificationItem.propTypes = {
   }),
 };
 
-function NotificationItem({ notification }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function NotificationItem({ notification }: any) {
   const { avatar, title } = renderContent(notification);
 
   return (
@@ -232,7 +234,8 @@ function NotificationItem({ notification }) {
 
 // ----------------------------------------------------------------------
 
-function renderContent(notification) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function renderContent(notification: any) {
   const title = (
     <Typography variant="subtitle2">
       {notification.title}

@@ -6,7 +6,8 @@ import Box from '@mui/material/Box';
 
 // ----------------------------------------------------------------------
 
-const Iconify = forwardRef(({ icon, width = 20, sx, ...other }, ref) => (
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Iconify = forwardRef(({ icon, width = 20, sx, ...other }: any, ref) => (
   <Box
     ref={ref}
     component={Icon}

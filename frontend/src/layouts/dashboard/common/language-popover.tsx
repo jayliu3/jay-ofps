@@ -30,7 +30,8 @@ const LANGS = [
 export default function LanguagePopover() {
   const [open, setOpen] = useState(null);
 
-  const handleOpen = (event) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleOpen = (event: any) => {
     setOpen(event.currentTarget);
   };
 
@@ -45,9 +46,7 @@ export default function LanguagePopover() {
         sx={{
           width: 40,
           height: 40,
-          ...(open && {
-            bgcolor: 'action.selected',
-          }),
+          bgcolor: open ? 'action.selected' : 'inherit',
         }}
       >
         <img src={LANGS[0].icon} alt={LANGS[0].label} />

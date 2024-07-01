@@ -17,7 +17,8 @@ import SvgColor from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
 
-export default function PostCard({ post, index }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function PostCard({ post, index }: any) {
   const { cover, title, view, comment, share, author, createdAt } = post;
 
   const latestPostLarge = index === 0;

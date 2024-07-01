@@ -9,7 +9,8 @@ import { RouterLink } from 'src/routes/components';
 
 // ----------------------------------------------------------------------
 
-const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Logo = forwardRef(({ disabledLink = false, sx, ...other }: any, ref) => {
   const theme = useTheme();
 
   const PRIMARY_LIGHT = theme.palette.primary.light;

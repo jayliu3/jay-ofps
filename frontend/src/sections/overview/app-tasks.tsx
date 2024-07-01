@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 
@@ -14,10 +15,10 @@ import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function AnalyticsTasks({ title, subheader, list, ...other }) {
+export default function AnalyticsTasks({ title, subheader, list, ...other }: any) {
   const [selected, setSelected] = useState(['2']);
 
-  const handleClickComplete = (taskId) => {
+  const handleClickComplete = (taskId: string) => {
     const tasksCompleted = selected.includes(taskId)
       ? selected.filter((value) => value !== taskId)
       : [...selected, taskId];
@@ -29,7 +30,7 @@ export default function AnalyticsTasks({ title, subheader, list, ...other }) {
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} />
 
-      {list.map((task) => (
+      {list.map((task: any) => (
         <TaskItem
           key={task.id}
           task={task}
@@ -49,10 +50,10 @@ AnalyticsTasks.propTypes = {
 
 // ----------------------------------------------------------------------
 
-function TaskItem({ task, checked, onChange }) {
+function TaskItem({ task, checked, onChange }: any) {
   const [open, setOpen] = useState(null);
 
-  const handleOpenMenu = (event) => {
+  const handleOpenMenu = (event: any) => {
     setOpen(event.currentTarget);
   };
 

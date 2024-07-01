@@ -25,7 +25,8 @@ import navConfig from './config-navigation';
 
 // ----------------------------------------------------------------------
 
-export default function Nav({ openNav, onCloseNav }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function Nav({ openNav, onCloseNav }: any) {
   const pathname = usePathname();
 
   const upLg = useResponsive('up', 'lg');
@@ -164,7 +165,8 @@ Nav.propTypes = {
 
 // ----------------------------------------------------------------------
 
-function NavItem({ item }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function NavItem({ item }:any) {
   const pathname = usePathname();
 
   const active = item.path === pathname;

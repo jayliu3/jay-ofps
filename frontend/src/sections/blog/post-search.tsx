@@ -12,7 +12,8 @@ PostSearch.propTypes = {
   posts: PropTypes.array.isRequired,
 };
 
-export default function PostSearch({ posts }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function PostSearch({ posts }: any) {
   return (
     <Autocomplete
       sx={{ width: 280 }}
@@ -29,7 +30,8 @@ export default function PostSearch({ posts }) {
         },
       }}
       options={posts}
-      getOptionLabel={(post) => post.title}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      getOptionLabel={(post: any) => post.title}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       renderInput={(params) => (
         <TextField

@@ -5,7 +5,8 @@ import TableCell from '@mui/material/TableCell';
 
 // ----------------------------------------------------------------------
 
-export default function TableEmptyRows({ emptyRows, height }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function TableEmptyRows({ emptyRows, height }: any) {
   if (!emptyRows) {
     return null;
   }

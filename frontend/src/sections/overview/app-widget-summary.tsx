@@ -9,7 +9,8 @@ import { fShortenNumber } from 'src/utils/format-number';
 
 // ----------------------------------------------------------------------
 
-export default function AppWidgetSummary({ title, total, icon, color = 'primary', sx, ...other }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+export default function AppWidgetSummary({ title, total, icon, color = 'primary', sx, ...other }: any) {
   return (
     <Card
       component={Stack}

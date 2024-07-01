@@ -9,7 +9,8 @@ import { StyledLabel } from './styles';
 // ----------------------------------------------------------------------
 
 const Label = forwardRef(
-  ({ children, color = 'default', variant = 'soft', startIcon, endIcon, sx, ...other }, ref) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ({ children, color = 'default', variant = 'soft', startIcon, endIcon, sx, ...other }: any, ref) => {
     const theme = useTheme();
 
     const iconStyles = {

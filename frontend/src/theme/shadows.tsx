@@ -1,4 +1,4 @@
-import { Shadows, alpha } from '@mui/material/styles';
+import { alpha, Shadows } from '@mui/material/styles';
 
 import { grey } from './palette';
 

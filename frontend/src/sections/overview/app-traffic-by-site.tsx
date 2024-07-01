@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -10,7 +11,7 @@ import { fShortenNumber } from 'src/utils/format-number';
 
 // ----------------------------------------------------------------------
 
-export default function AppTrafficBySite({ title, subheader, list, ...other }) {
+export default function AppTrafficBySite({ title, subheader, list, ...other }: any) {
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} />
@@ -23,7 +24,7 @@ export default function AppTrafficBySite({ title, subheader, list, ...other }) {
           gridTemplateColumns: 'repeat(2, 1fr)',
         }}
       >
-        {list.map((site) => (
+        {list.map((site: any) => (
           <Paper
             key={site.name}
             variant="outlined"

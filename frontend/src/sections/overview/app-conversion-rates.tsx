@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -10,17 +11,17 @@ import Chart, { useChart } from 'src/components/chart';
 
 // ----------------------------------------------------------------------
 
-export default function AppConversionRates({ title, subheader, chart, ...other }) {
+export default function AppConversionRates({ title, subheader, chart, ...other }: any) {
   const { colors, series, options } = chart;
 
-  const chartSeries = series.map((i) => i.value);
+  const chartSeries = series.map((i: any) => i.value);
 
   const chartOptions = useChart({
     colors,
     tooltip: {
       marker: { show: false },
       y: {
-        formatter: (value) => fNumber(value),
+        formatter: (value: any) => fNumber(value),
         title: {
           formatter: () => '',
         },
@@ -34,7 +35,7 @@ export default function AppConversionRates({ title, subheader, chart, ...other }
       },
     },
     xaxis: {
-      categories: series.map((i) => i.label),
+      categories: series.map((i: any) => i.label),
     },
     ...options,
   });

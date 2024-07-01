@@ -26,7 +26,8 @@ const StyledChart = styled(Chart)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function AppCurrentSubject({ title, subheader, chart, ...other }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function AppCurrentSubject({ title, subheader, chart, ...other }: any) {
   const theme = useTheme();
 
   const { series, colors, categories, options } = chart;

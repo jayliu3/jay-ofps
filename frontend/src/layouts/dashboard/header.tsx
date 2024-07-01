@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import AppBar from '@mui/material/AppBar';
@@ -21,6 +19,7 @@ import NotificationsPopover from './common/notifications-popover';
 
 // ----------------------------------------------------------------------
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function Header(onOpenNav: any) {
   const theme = useTheme();
 
@@ -46,21 +45,22 @@ export default function Header(onOpenNav: any) {
     </>
   );
 
+
   return (
     <AppBar
       sx={{
         boxShadow: 'none',
         height: HEADER.H_MOBILE,
         zIndex: theme.zIndex.appBar + 1,
-        ...bgBlur({
-          color: theme.palette.background.default,
-        }),
-        transition: theme.transitions.create(['height'], {
-          duration: theme.transitions.duration.shorter,
-        }),
+        transition: theme.transitions.create(
+          ['height'], { duration: theme.transitions.duration.shorter, }
+        ),
         ...(lgUp && {
           width: `calc(100% - ${NAV.WIDTH + 1}px)`,
           height: HEADER.H_DESKTOP,
+        }),
+        ...bgBlur({
+          color: theme.palette.background.default,
         }),
       }}
     >
@@ -76,6 +76,3 @@ export default function Header(onOpenNav: any) {
   );
 }
 
-Header.propTypes = {
-  onOpenNav: PropTypes.func,
-};

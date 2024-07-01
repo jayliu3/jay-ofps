@@ -20,7 +20,8 @@ const SORT_OPTIONS = [
 export default function ShopProductSort() {
   const [open, setOpen] = useState(null);
 
-  const handleOpen = (event) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleOpen = (event: any) => {
     setOpen(event.currentTarget);
   };
 

@@ -7,7 +7,8 @@ import Typography from '@mui/material/Typography';
 
 // ----------------------------------------------------------------------
 
-export default function TableNoData({ query }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function TableNoData({ query }:any) {
   return (
     <TableRow>
       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>

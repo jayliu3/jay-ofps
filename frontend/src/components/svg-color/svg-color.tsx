@@ -5,7 +5,8 @@ import Box from '@mui/material/Box';
 
 // ----------------------------------------------------------------------
 
-const SvgColor = forwardRef(({ src, sx, ...other }, ref) => (
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const SvgColor = forwardRef(({ src, sx, ...other }: any, ref) => (
   <Box
     component="span"
     className="svg-color"

@@ -10,6 +10,7 @@ import { NAV, HEADER } from './config-layout';
 
 const SPACING = 8;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function Main({ children, sx, ...other }: any) {
   const lgUp = useResponsive('up', 'lg');
 

@@ -1,5 +1,5 @@
-import { alpha } from '@mui/material/styles';
 import { PaletteMode } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 // ----------------------------------------------------------------------
 
 // SETUP COLORS

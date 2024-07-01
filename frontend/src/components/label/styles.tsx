@@ -3,7 +3,8 @@ import { alpha, styled } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 
-export const StyledLabel = styled(Box)(({ theme, ownerState }) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const StyledLabel = styled(Box)(({ theme, ownerState }: any) => {
   const lightMode = theme.palette.mode === 'light';
 
   const filledVariant = ownerState.variant === 'filled';
