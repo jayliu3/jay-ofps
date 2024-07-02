@@ -1,10 +1,9 @@
-import { alpha } from '@mui/material/styles';
+import { Theme, alpha } from '@mui/material/styles';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 
 // ----------------------------------------------------------------------
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function overrides(theme: any) {
+export function overrides(theme: Theme) {
   return {
     MuiCssBaseline: {
       styleOverrides: {

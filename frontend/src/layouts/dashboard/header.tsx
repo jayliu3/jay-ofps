@@ -18,9 +18,11 @@ import LanguagePopover from './common/language-popover';
 import NotificationsPopover from './common/notifications-popover';
 
 // ----------------------------------------------------------------------
+interface HeaderProps {
+  onOpenNav: () => void;
+}
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function Header(onOpenNav: any) {
+const Header: React.FC<HeaderProps> = ({ onOpenNav }: HeaderProps) => {
   const theme = useTheme();
 
   const lgUp = useResponsive('up', 'lg');
@@ -45,16 +47,15 @@ export default function Header(onOpenNav: any) {
     </>
   );
 
-
   return (
     <AppBar
       sx={{
         boxShadow: 'none',
         height: HEADER.H_MOBILE,
         zIndex: theme.zIndex.appBar + 1,
-        transition: theme.transitions.create(
-          ['height'], { duration: theme.transitions.duration.shorter, }
-        ),
+        transition: theme.transitions.create(['height'], {
+          duration: theme.transitions.duration.shorter,
+        }),
         ...(lgUp && {
           width: `calc(100% - ${NAV.WIDTH + 1}px)`,
           height: HEADER.H_DESKTOP,
@@ -74,5 +75,5 @@ export default function Header(onOpenNav: any) {
       </Toolbar>
     </AppBar>
   );
-}
-
+};
+export default Header;

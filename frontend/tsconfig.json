@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
+    "target": "ES6",
+    "module": "commonjs",
     "lib": [
       "DOM",
       "DOM.Iterable",
-      "ESNext"
+      "ES6"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -19,12 +19,15 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
       "src/*": [
         "./src/*"
       ]
-    }
+    },
+    "noImplicitAny": true, // 不允许隐式的any类型
+    "noImplicitThis": true, // 不允许this有隐式的any类型
+    "strictNullChecks": true, // 不允许把null、undefined赋值给其他类型的变量
   },
   "include": [
     "src",

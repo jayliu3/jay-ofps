@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import { alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -21,12 +20,15 @@ import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
 
 import { NAV } from './config-layout';
-import navConfig from './config-navigation';
+import navConfig, { navConfigItem } from './config-navigation';
 
 // ----------------------------------------------------------------------
+interface NavProps {
+  onCloseNav: () => void;
+  openNav: boolean;
+}
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function Nav({ openNav, onCloseNav }: any) {
+export default function Nav({ openNav, onCloseNav }: NavProps) {
   const pathname = usePathname();
 
   const upLg = useResponsive('up', 'lg');
@@ -71,35 +73,6 @@ export default function Nav({ openNav, onCloseNav }: any) {
     </Stack>
   );
 
-  const renderUpgrade = (
-    <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
-      <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
-        <Box
-          component="img"
-          src="/assets/illustrations/illustration_avatar.png"
-          sx={{ width: 100, position: 'absolute', top: -50 }}
-        />
-
-        <Box sx={{ textAlign: 'center' }}>
-          <Typography variant="h6">Get more?</Typography>
-
-          <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-            From only $69
-          </Typography>
-        </Box>
-
-        <Button
-          href="https://material-ui.com/store/items/minimal-dashboard/"
-          target="_blank"
-          variant="contained"
-          color="inherit"
-        >
-          Upgrade to Pro
-        </Button>
-      </Stack>
-    </Box>
-  );
-
   const renderContent = (
     <Scrollbar
       sx={{
@@ -118,8 +91,6 @@ export default function Nav({ openNav, onCloseNav }: any) {
       {renderMenu}
 
       <Box sx={{ flexGrow: 1 }} />
-
-      {renderUpgrade}
     </Scrollbar>
   );
 
@@ -165,8 +136,7 @@ Nav.propTypes = {
 
 // ----------------------------------------------------------------------
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function NavItem({ item }:any) {
+function NavItem({ item }: { item: navConfigItem }) {
   const pathname = usePathname();
 
   const active = item.path === pathname;
@@ -200,7 +170,3 @@ function NavItem({ item }:any) {
     </ListItemButton>
   );
 }
-
-NavItem.propTypes = {
-  item: PropTypes.object,
-};

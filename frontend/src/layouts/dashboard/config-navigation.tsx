@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 import SvgColor from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
@@ -5,8 +7,12 @@ import SvgColor from 'src/components/svg-color';
 const icon = (name: string) => (
   <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
 );
-
-const navConfig = [
+export interface navConfigItem {
+  title: string;
+  path: string;
+  icon: ReactNode;
+}
+const navConfig: Array<navConfigItem> = [
   {
     title: 'dashboard',
     path: '/',

@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // ----------------------------------------------------------------------
 
-import { TypographyOptions } from "@mui/material/styles/createTypography";
+import { TypographyOptions } from '@mui/material/styles/createTypography';
 
 export function remToPx(value: string) {
   return Math.round(parseFloat(value) * 16);
@@ -11,7 +10,13 @@ export function pxToRem(value: number) {
   return `${value / 16}rem`;
 }
 
-export function responsiveFontSizes({ sm, md, lg }: any) {
+interface ResponsiveFontSizesParams {
+  sm: number;
+  md: number;
+  lg: number;
+}
+
+export function responsiveFontSizes({ sm, md, lg }: ResponsiveFontSizesParams) {
   return {
     '@media (min-width:600px)': {
       fontSize: pxToRem(sm),

@@ -100,6 +100,11 @@ const base = {
 };
 
 // ----------------------------------------------------------------------
+declare module '@mui/material/styles/createPalette' {
+  interface TypeBackground {
+    neutral: string;
+  }
+}
 
 export function palette() {
   return {
