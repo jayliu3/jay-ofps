@@ -1,7 +1,7 @@
 {
   "name": "@minimal/material-kit-react",
   "author": "minimals.cc",
-  "licence": "MIT",
+  "license": "MIT",
   "version": "1.8.0",
   "private": false,
   "scripts": {
@@ -26,7 +26,9 @@
     "@iconify/react": "^4.1.1",
     "@mui/lab": "^5.0.0-alpha.147",
     "@mui/material": "^5.14.12",
+    "@tanstack/react-query": "^5.50.1",
     "apexcharts": "^3.43.0",
+    "axios": "^1.7.2",
     "date-fns": "^2.30.0",
     "history": "^5.3.0",
     "lodash": "^4.17.21",
@@ -60,7 +62,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-unused-imports": "^3.0.0",
     "prettier": "^3.0.3",
-    "typescript": "^5.5.2",
+    "typescript": "5.3.3",
     "vite": "^4.4.11",
     "vite-plugin-checker": "^0.6.2"
   }

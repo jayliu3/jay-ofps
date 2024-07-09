@@ -20,9 +20,26 @@ namespace Ofps.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FileInfo>>> GetFiles()
+        public async Task<ActionResult<IEnumerable<FileInfo>>> GetFiles(int pageNumber = 0, int pageSize = 10)
         {
-            return await _context.FileInfos.ToListAsync();
+            var totalItems = await _context.FileInfos.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            var files = await _context.FileInfos
+                           .Skip(pageNumber * pageSize)
+                           .Take(pageSize)
+                           .ToListAsync();
+
+            var response = new
+            {
+                TotalItems = totalItems,
+                TotalPages = totalPages,
+                CurrentPage = pageNumber,
+                PageSize = pageSize,
+                Items = files
+            };
+
+            return Ok(response);
         }
 
         [HttpGet("{id}")]

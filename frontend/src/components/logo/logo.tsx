@@ -2,14 +2,14 @@ import { forwardRef } from 'react';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
-import { useTheme } from '@mui/material/styles';
+import { Theme, SxProps, useTheme } from '@mui/material/styles';
 
 import { RouterLink } from 'src/routes/components';
 
 // ----------------------------------------------------------------------
 interface LogoProps {
   disabledLink?: boolean;
-  sx?: object;
+  sx?: SxProps<Theme>;
 }
 
 const Logo = forwardRef<HTMLLinkElement, LogoProps>(

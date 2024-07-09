@@ -8,6 +8,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Add the CORS service
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 // Set maximum request body size limit
 builder.Services.Configure<FormOptions>(options =>
 {
@@ -24,6 +35,9 @@ builder.Services.AddDbContext<AppDbContext>(
                       .LogTo(Console.WriteLine, LogLevel.Information)); // Enable logging to console
 
 var app = builder.Build();
+
+//Using CORS 
+app.UseCors("AllowAll");
 
 // Use Swagger
 if (app.Environment.IsDevelopment())

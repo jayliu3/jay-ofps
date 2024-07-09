@@ -1,27 +1,27 @@
-import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
-import { Icon } from '@iconify/react';
+import { Icon, IconifyIcon } from '@iconify/react';
 
 import Box from '@mui/material/Box';
+import { Theme, SxProps } from '@mui/material';
 
 // ----------------------------------------------------------------------
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Iconify = forwardRef(({ icon, width = 20, sx, ...other }: any, ref) => (
-  <Box
-    ref={ref}
-    component={Icon}
-    className="component-iconify"
-    icon={icon}
-    sx={{ width, height: width, ...sx }}
-    {...other}
-  />
-));
-
-Iconify.propTypes = {
-  icon: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
-  sx: PropTypes.object,
-  width: PropTypes.number,
-};
+interface IconifyProps {
+  icon: string | IconifyIcon;
+  width?: number;
+  sx?: SxProps<Theme>;
+  color?: string;
+}
+const Iconify = forwardRef<HTMLDivElement, IconifyProps>(
+  ({ icon, width = 20, sx, ...other }, ref: React.Ref<unknown>) => (
+    <Box
+      ref={ref}
+      component={Icon}
+      className="component-iconify"
+      icon={icon}
+      sx={{ width, height: width, ...sx }}
+      {...other}
+    />
+  )
+);
 
 export default Iconify;

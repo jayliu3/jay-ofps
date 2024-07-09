@@ -2,7 +2,7 @@ import { forwardRef, useCallback } from 'react';
 
 import Stack from '@mui/material/Stack';
 import ButtonBase from '@mui/material/ButtonBase';
-import { Theme, alpha } from '@mui/material/styles';
+import { Theme, alpha, SxProps } from '@mui/material/styles';
 
 import Iconify from '../iconify';
 
@@ -12,8 +12,8 @@ interface ColorPickerProps {
   selected: string | string[];
   onSelectColor: (color: string | string[]) => void;
   limit?: number | 'auto';
-  sx?: React.CSSProperties;
-  name?: string
+  sx?: SxProps<Theme>;
+  name?: string;
 }
 
 const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(

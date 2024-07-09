@@ -1,10 +1,13 @@
-import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme, Breakpoint } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function useResponsive(query: any, start: any, end?: any) {
+export function useResponsive(
+  query: string,
+  start: Breakpoint,
+  end: Breakpoint | number = 1536
+): boolean {
   const theme = useTheme();
 
   const mediaUp = useMediaQuery(theme.breakpoints.up(start));
