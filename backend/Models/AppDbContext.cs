@@ -10,5 +10,6 @@ namespace Ofps.Models
         }
 
         public DbSet<FileInfo> FileInfos { get; set; }
+        public DbSet<Videos> Videos { get; set; }
     }
 }

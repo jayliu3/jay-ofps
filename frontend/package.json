@@ -27,6 +27,7 @@
     "@mui/lab": "^5.0.0-alpha.147",
     "@mui/material": "^5.14.12",
     "@tanstack/react-query": "^5.50.1",
+    "@tanstack/react-query-devtools": "^5.50.1",
     "apexcharts": "^3.43.0",
     "axios": "^1.7.2",
     "date-fns": "^2.30.0",

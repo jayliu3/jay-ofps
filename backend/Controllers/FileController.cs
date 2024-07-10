@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Ofps.Models;
 using FileInfo = Ofps.Models.FileInfo;
+using System.Linq.Dynamic.Core;
 
 namespace Ofps.Controllers
 {
@@ -20,15 +21,27 @@ namespace Ofps.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FileInfo>>> GetFiles(int pageNumber = 0, int pageSize = 10)
+        public async Task<ActionResult<IEnumerable<FileInfo>>> GetFiles(
+            int pageNumber = 0,
+            int pageSize = 10,
+            string? sortField = null,
+            string? sortOrder = null
+            )
         {
             var totalItems = await _context.FileInfos.CountAsync();
             var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
-            var files = await _context.FileInfos
-                           .Skip(pageNumber * pageSize)
-                           .Take(pageSize)
-                           .ToListAsync();
+            var query = _context.FileInfos.AsQueryable();
+
+            if (!string.IsNullOrEmpty(sortField) && !string.IsNullOrEmpty(sortOrder))
+            {
+                var sortExpression = $"{sortField} {(sortOrder.Equals("desc", StringComparison.CurrentCultureIgnoreCase) ? "descending" : "ascending")}";
+                query = query.OrderBy(sortExpression);
+            }
+            var files = await query
+                .Skip(pageNumber * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
             var response = new
             {
@@ -93,19 +106,35 @@ namespace Ofps.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFileInfo(int id)
+        [HttpDelete]
+        public async Task<IActionResult> DeleteFileInfo([FromBody] int[] ids)
         {
-            var fileInfo = await _context.FileInfos.FindAsync(id);
-            if (fileInfo == null)
+            var fileInfos = await _context.FileInfos.Where(fi => ids.Contains(fi.Id)).ToListAsync();
+            if (fileInfos == null || fileInfos.Count == 0)
             {
                 return NotFound();
             }
 
-            _context.FileInfos.Remove(fileInfo);
+            // Check whether any records in the Video table refer to these FileInfo
+            var referencedFileInfoIds = await _context.Videos
+                .Where(v => ids.Contains(v.FileInfo.Id))
+                .Select(v => v.FileInfo.Id)
+                .ToListAsync();
+            var fileInfosToDelete = fileInfos
+                .Where(fi => !referencedFileInfoIds.Contains(fi.Id))
+                .ToList();
+            if (fileInfosToDelete.Count == 0)
+            {
+                return BadRequest("All requested FileInfo records are referenced by Videos and cannot be deleted.");
+            }
+            _context.FileInfos.RemoveRange(fileInfosToDelete);
             await _context.SaveChangesAsync();
-
-            return NoContent();
+            var response = new
+            {
+                DeletedIds = fileInfosToDelete.Select(fi => fi.Id).ToList(),
+                NotDeletedIds = referencedFileInfoIds
+            };
+            return Ok(response);
         }
 
         private bool FileInfoExists(int id)

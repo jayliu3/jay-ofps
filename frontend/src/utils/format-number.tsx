@@ -36,3 +36,12 @@ function result(format: string, key = '.00') {
 
   return isInteger ? format.replace(key, '') : format;
 }
+
+export function formatFileSize(sizeInBytes: number): string {
+  if (sizeInBytes === 0) return '0 Bytes';
+
+  const units = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const digitGroups = Math.floor(Math.log(sizeInBytes) / Math.log(1024));
+
+  return `${(sizeInBytes / 1024 ** digitGroups).toFixed(2)}${units[digitGroups]}`;
+}

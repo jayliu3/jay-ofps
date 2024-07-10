@@ -19,6 +19,11 @@ const navConfig: Array<navConfigItem> = [
     icon: icon('ic_analytics'),
   },
   {
+    title: 'fileInfo',
+    path: '/fileInfo',
+    icon: icon('ic_user'),
+  },
+  {
     title: 'video',
     path: '/video',
     icon: icon('ic_user'),

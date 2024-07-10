@@ -4,15 +4,17 @@ import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 
 import App from './app';
-
+import { NotificationProvider } from './hooks/notification-context';
 // ----------------------------------------------------------------------
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <HelmetProvider>
-    <BrowserRouter>
-      <Suspense>
-        <App />
-      </Suspense>
-    </BrowserRouter>
-  </HelmetProvider>
+  <NotificationProvider>
+    <HelmetProvider>
+      <BrowserRouter>
+        <Suspense fallback={<div>Loading...</div>}>
+          <App />
+        </Suspense>
+      </BrowserRouter>
+    </HelmetProvider>
+  </NotificationProvider>
 );

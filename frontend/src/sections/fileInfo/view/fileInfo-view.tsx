@@ -24,38 +24,37 @@ import { Paper, Dialog, DialogActions, DialogContent, DialogContentText } from '
 
 import { useNotification } from 'src/hooks/notification-context';
 
+import { formatFileSize } from 'src/utils/format-number';
+
 import { pages } from 'src/modes/pages';
-import { Video } from 'src/modes/video';
-import { SelectAllVideos } from 'src/modes/string-pool';
-import { getVideos, deleteVideos } from 'src/api/video-service';
+import { FileInfo } from 'src/modes/fileInfo';
+import { SelectAllFileInfos } from 'src/modes/string-pool';
+import { getFiles, deleteFiles } from 'src/api/file-service';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import TableEmptyRows from 'src/components/utils/table-empty-rows';
 
-export default function VideosPage() {
+export default function FileInfoPage() {
   const [order, setOrder] = useState('desc');
   const [orderBy, setOrderBy] = useState('CreateTime');
   const [selectedAll, setSelectedAll] = useState([] as Array<number>);
-  const [videos, setVideos] = useState([] as Array<Video>);
+  const [fileInfos, setFileInfos] = useState([] as Array<FileInfo>);
   const { showNotification } = useNotification();
 
   const headLabel = [
     { id: 'Id', label: 'Id' },
-    { id: 'VideoName', label: 'VideoName', minWidth: 180 },
-    { id: 'Channel', label: 'Channel', minWidth: 180 },
-    { id: 'Type', label: 'Type', minWidth: 130 },
-    { id: 'Year', label: 'Year', minWidth: 180 },
-    { id: 'Region', label: 'Region', minWidth: 180 },
-    { id: 'Language', label: 'Language', minWidth: 180 },
-    { id: 'Intro', label: 'Intro', minWidth: 180 },
-    { id: 'CreateTime', label: 'CreateTime', minWidth: 180, align: 'center', width: 180 },
+    { id: 'Name', label: 'name' },
+    { id: 'LocalPath', label: 'localPath' },
+    { id: 'Size', label: 'size', width: 130, minWidth: 130 },
+    { id: 'CreateTime', label: 'createTime', align: 'center', width: 180, minWidth: 180 },
+    { id: 'FileType', label: 'fileType' },
     { id: '' },
   ];
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = videos.map((n) => n.id);
+      const newSelecteds = fileInfos.map((n) => n.id);
       setSelectedAll(newSelecteds);
       return;
     }
@@ -111,30 +110,30 @@ export default function VideosPage() {
   };
 
   const {
-    data: responesData,
+    data: pageFileInfos,
     isLoading,
     isError,
     isSuccess,
-  } = useQuery<pages<Video>>({
-    queryKey: [SelectAllVideos, page, rowsPerPage, orderBy, order],
+  } = useQuery<pages<FileInfo>>({
+    queryKey: [SelectAllFileInfos, page, rowsPerPage, orderBy, order],
     queryFn: () =>
-      getVideos({ pageNumber: page, pageSize: rowsPerPage, sortField: orderBy, sortOrder: order }),
+      getFiles({ pageNumber: page, pageSize: rowsPerPage, sortField: orderBy, sortOrder: order }),
     placeholderData: keepPreviousData,
   });
 
   useEffect(() => {
-    if (!isLoading && !isError && responesData) {
-      console.log(responesData);
-      setVideos(responesData.items);
-      setTotalItems(responesData.totalItems);
+    if (!isLoading && !isError && pageFileInfos) {
+      console.log(pageFileInfos);
+      setFileInfos(pageFileInfos.items);
+      setTotalItems(pageFileInfos.totalItems);
     }
-  }, [responesData, isLoading, isError]);
+  }, [pageFileInfos, isLoading, isError]);
 
   const queryClient = useQueryClient();
   const { isPending, mutate } = useMutation({
-    mutationFn: deleteVideos,
+    mutationFn: deleteFiles,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [SelectAllVideos] });
+      queryClient.invalidateQueries({ queryKey: [SelectAllFileInfos] });
     },
   });
   const handleDeleteMenu = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, id: number) => {
@@ -167,7 +166,7 @@ export default function VideosPage() {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Videos</Typography>
+        <Typography variant="h4">FileInfo</Typography>
       </Stack>
 
       <Card>
@@ -178,8 +177,10 @@ export default function VideosPage() {
                 <TableRow key={-1}>
                   <TableCell padding="checkbox">
                     <Checkbox
-                      indeterminate={selectedAll.length > 0 && selectedAll.length < videos.length}
-                      checked={videos.length > 0 && selectedAll.length === videos.length}
+                      indeterminate={
+                        selectedAll.length > 0 && selectedAll.length < fileInfos.length
+                      }
+                      checked={fileInfos.length > 0 && selectedAll.length === fileInfos.length}
                       onChange={handleSelectAllClick}
                     />
                   </TableCell>
@@ -229,8 +230,8 @@ export default function VideosPage() {
 
               <TableBody>
                 {isSuccess &&
-                  videos &&
-                  videos.map((row) => (
+                  fileInfos &&
+                  fileInfos.map((row) => (
                     <TableRow
                       hover
                       tabIndex={-1}
@@ -249,15 +250,18 @@ export default function VideosPage() {
                       <TableCell component="th" scope="row">
                         {row.id}
                       </TableCell>
-                      <TableCell>{row.videoName}</TableCell>
-                      <TableCell>{row.channel}</TableCell>
-                      <TableCell>{row.type}</TableCell>
-                      <TableCell>{row.year}</TableCell>
-                      <TableCell>{row.region}</TableCell>
-                      <TableCell>{row.language}</TableCell>
+
+                      <TableCell>{row.name}</TableCell>
+
+                      <TableCell>{row.localPath}</TableCell>
+
+                      <TableCell>{formatFileSize(row.size)}</TableCell>
+
                       <TableCell align="center">
                         {format(new Date(row.createTime), 'yyyy-MM-dd HH:mm:ss')}
                       </TableCell>
+
+                      <TableCell>{row.fileType}</TableCell>
 
                       <TableCell align="right">
                         <IconButton onClick={(e) => handleOpenMenu(e, row.id)}>
@@ -266,7 +270,7 @@ export default function VideosPage() {
                       </TableCell>
                     </TableRow>
                   ))}
-                {isSuccess && videos.length === 0 && (
+                {isSuccess && fileInfos.length === 0 && (
                   <TableRow>
                     <TableCell align="center" colSpan={headLabel.length} sx={{ py: 3 }}>
                       <Paper
@@ -313,9 +317,10 @@ export default function VideosPage() {
                     </TableCell>
                   </TableRow>
                 )}
+
                 <TableEmptyRows
                   height={77}
-                  emptyRows={rowsPerPage - videos.length}
+                  emptyRows={rowsPerPage - fileInfos.length}
                   colSpan={headLabel.length}
                 />
               </TableBody>

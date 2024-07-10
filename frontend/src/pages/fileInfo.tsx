@@ -1,17 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 
-import { VideoView } from 'src/sections/video/view';
+import { FileInfoView } from 'src/sections/fileInfo/view';
 
 // ----------------------------------------------------------------------
 
-export default function VideoPage() {
+export default function FileInfoPage() {
   return (
     <>
       <Helmet>
-        <title>Video Management</title>
+        <title>FileInfo Management</title>
       </Helmet>
 
-      <VideoView />
+      <FileInfoView />
     </>
   );
 }

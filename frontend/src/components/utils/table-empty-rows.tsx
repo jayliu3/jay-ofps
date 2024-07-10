@@ -4,9 +4,13 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 
 // ----------------------------------------------------------------------
+interface TableEmptyRowsProps {
+  emptyRows: number;
+  height: number;
+  colSpan?: number;
+}
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function TableEmptyRows({ emptyRows, height }: any) {
+export default function TableEmptyRows({ emptyRows, height, colSpan = 9 }: TableEmptyRowsProps) {
   if (!emptyRows) {
     return null;
   }
@@ -19,7 +23,7 @@ export default function TableEmptyRows({ emptyRows, height }: any) {
         }),
       }}
     >
-      <TableCell colSpan={9} />
+      <TableCell colSpan={colSpan} />
     </TableRow>
   );
 }

@@ -1,8 +1,8 @@
 import axiosInstance from './config/axiosInstance';
 
-export const getFiles = async (pageNumber: number, pageSize: number) => {
+export const getFiles = async (params: object) => {
   const response = await axiosInstance.get('/File', {
-    params: { pageNumber, pageSize },
+    params: { ...params },
   });
   return response.data;
 };
@@ -19,7 +19,11 @@ export const uploadFile = async (file: File) => {
   return response.data;
 };
 
-export const deleteFile = async (id: number) => {
-  const response = await axiosInstance.delete(`/File/${id}`);
+export const deleteFiles = async (ids: number[]) => {
+  const response = await axiosInstance.request({
+    method: 'DELETE',
+    url: '/File',
+    data: ids,
+  });
   return response.data;
 };
