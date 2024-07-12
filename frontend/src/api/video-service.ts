@@ -15,3 +15,8 @@ export const deleteVideos = async (ids: number[]) => {
   });
   return response.data;
 };
+
+export const addVideos = async (params: object) => {
+  const response = await axiosInstance.post('/Videos', params);
+  return response.data;
+};

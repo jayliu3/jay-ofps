@@ -20,18 +20,27 @@ import TableContainer from '@mui/material/TableContainer';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import TablePagination from '@mui/material/TablePagination';
 import TableCell, { SortDirection } from '@mui/material/TableCell';
-import { Paper, Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
+import {
+  Paper,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  CircularProgress,
+  DialogContentText,
+} from '@mui/material';
 
 import { useNotification } from 'src/hooks/notification-context';
 
+import { SelectAllVideos } from 'src/utils/string-pool';
+
 import { pages } from 'src/modes/pages';
 import { Video } from 'src/modes/video';
-import { SelectAllVideos } from 'src/modes/string-pool';
 import { getVideos, deleteVideos } from 'src/api/video-service';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
-import TableEmptyRows from 'src/components/utils/table-empty-rows';
+
+import AddVideoForm from '../add-video-form';
 
 export default function VideosPage() {
   const [order, setOrder] = useState('desc');
@@ -48,7 +57,6 @@ export default function VideosPage() {
     { id: 'Year', label: 'Year', minWidth: 180 },
     { id: 'Region', label: 'Region', minWidth: 180 },
     { id: 'Language', label: 'Language', minWidth: 180 },
-    { id: 'Intro', label: 'Intro', minWidth: 180 },
     { id: 'CreateTime', label: 'CreateTime', minWidth: 180, align: 'center', width: 180 },
     { id: '' },
   ];
@@ -131,7 +139,7 @@ export default function VideosPage() {
   }, [responesData, isLoading, isError]);
 
   const queryClient = useQueryClient();
-  const { isPending, mutate } = useMutation({
+  const { isPending, mutate: mutateDelete } = useMutation({
     mutationFn: deleteVideos,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [SelectAllVideos] });
@@ -153,7 +161,7 @@ export default function VideosPage() {
     setDeleteIds([]);
   };
   const handleConfirmDelete = () => {
-    mutate(deleteIds, {
+    mutateDelete(deleteIds, {
       onSuccess: () => {
         handleCloseDialog();
         showNotification('删除成功', 'success');
@@ -164,10 +172,20 @@ export default function VideosPage() {
     });
   };
 
+  const [openVideoForm, setOpenVideoForm] = useState(false);
+
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Videos</Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<Iconify icon="material-symbols:add" />}
+          onClick={() => setOpenVideoForm(true)}
+        >
+          Add
+        </Button>
       </Stack>
 
       <Card>
@@ -227,7 +245,15 @@ export default function VideosPage() {
                 </TableRow>
               </TableHead>
 
-              <TableBody>
+              <TableBody
+                sx={{
+                  '& .MuiTableCell-root': {
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                  },
+                }}
+              >
                 {isSuccess &&
                   videos &&
                   videos.map((row) => (
@@ -313,11 +339,6 @@ export default function VideosPage() {
                     </TableCell>
                   </TableRow>
                 )}
-                <TableEmptyRows
-                  height={77}
-                  emptyRows={rowsPerPage - videos.length}
-                  colSpan={headLabel.length}
-                />
               </TableBody>
             </Table>
           </TableContainer>
@@ -342,9 +363,23 @@ export default function VideosPage() {
           <Button onClick={(e) => handleCloseDialog(e)} color="primary" autoFocus>
             Cancel
           </Button>
-          <Button onClick={handleConfirmDelete} color="error" disabled={isPending}>
-            Delete
-          </Button>
+          <Box sx={{ m: 1, position: 'relative' }}>
+            <Button onClick={handleConfirmDelete} color="error" disabled={isPending}>
+              Delete
+            </Button>
+            {isPending && (
+              <CircularProgress
+                size={24}
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  marginTop: '-12px',
+                  marginLeft: '-12px',
+                }}
+              />
+            )}
+          </Box>
         </DialogActions>
       </Dialog>
       <Popover
@@ -364,6 +399,7 @@ export default function VideosPage() {
           Delete
         </MenuItem>
       </Popover>
+      <AddVideoForm open={openVideoForm} onClose={() => setOpenVideoForm(false)} />
     </Container>
   );
 }

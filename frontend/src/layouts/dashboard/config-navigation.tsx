@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 
+import Iconify from 'src/components/iconify';
 import SvgColor from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
@@ -16,17 +17,17 @@ const navConfig: Array<navConfigItem> = [
   {
     title: 'dashboard',
     path: '/',
-    icon: icon('ic_analytics'),
+    icon: <Iconify icon="material-symbols:space-dashboard" width={24} />,
   },
   {
     title: 'fileInfo',
     path: '/fileInfo',
-    icon: icon('ic_user'),
+    icon: <Iconify icon="material-symbols:upload-file-rounded" width={24} />,
   },
   {
     title: 'video',
     path: '/video',
-    icon: icon('ic_user'),
+    icon: <Iconify icon="material-symbols:hangout-video-outline" width={24} />,
   },
   {
     title: 'user',
