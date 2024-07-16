@@ -10,7 +10,7 @@ import Iconify from '../iconify';
 interface ColorPickerProps {
   colors: string[];
   selected: string | string[];
-  onSelectColor: (color: string | string[]) => void;
+  onSelectColor?: (color: string | string[]) => void;
   limit?: number | 'auto';
   sx?: SxProps<Theme>;
   name?: string;
@@ -23,15 +23,14 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
     const handleSelect = useCallback(
       (color: string) => {
         if (singleSelect) {
-          if (color !== selected) {
+          if (color !== selected && onSelectColor) {
             onSelectColor(color);
           }
         } else {
           const newSelected = selected.includes(color)
             ? selected.filter((value) => value !== color)
             : [...selected, color];
-
-          onSelectColor(newSelected);
+          if (onSelectColor) onSelectColor(newSelected);
         }
       },
       [onSelectColor, selected, singleSelect]

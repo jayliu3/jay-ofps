@@ -1,3 +1,5 @@
+import { Video } from 'src/modes/video';
+
 import axiosInstance from './config/axiosInstance';
 
 export const getVideos = async (params: object) => {
@@ -16,7 +18,12 @@ export const deleteVideos = async (ids: number[]) => {
   return response.data;
 };
 
-export const addVideos = async (params: object) => {
+export const addVideo = async (params: object) => {
   const response = await axiosInstance.post('/Videos', params);
+  return response.data;
+};
+
+export const updateVideo = async (params: Video) => {
+  const response = await axiosInstance.put(`/Videos/${params.id}`, params);
   return response.data;
 };

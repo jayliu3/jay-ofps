@@ -25,19 +25,28 @@ namespace Ofps.Controllers
             int pageNumber = 0,
             int pageSize = 10,
             string? sortField = null,
-            string? sortOrder = null
+            string? sortOrder = null,
+            string? name = null
             )
         {
-            var totalItems = await _context.FileInfos.CountAsync();
-            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
 
             var query = _context.FileInfos.AsQueryable();
+            if (!string.IsNullOrEmpty(name))
+            {
+                query = query.Where(v => !string.IsNullOrEmpty(v.Name) && v.Name.Contains(name));
+            }
+
+            var totalItems = await query.CountAsync();
 
             if (!string.IsNullOrEmpty(sortField) && !string.IsNullOrEmpty(sortOrder))
             {
                 var sortExpression = $"{sortField} {(sortOrder.Equals("desc", StringComparison.CurrentCultureIgnoreCase) ? "descending" : "ascending")}";
                 query = query.OrderBy(sortExpression);
             }
+
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
             var files = await query
                 .Skip(pageNumber * pageSize)
                 .Take(pageSize)

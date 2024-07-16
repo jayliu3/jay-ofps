@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 
 import Box from '@mui/material/Box';
@@ -23,24 +23,31 @@ import TableCell, { SortDirection } from '@mui/material/TableCell';
 import {
   Paper,
   Dialog,
+  Toolbar,
+  Tooltip,
   DialogActions,
   DialogContent,
+  OutlinedInput,
+  InputAdornment,
   CircularProgress,
   DialogContentText,
 } from '@mui/material';
 
 import { useNotification } from 'src/hooks/notification-context';
 
+import { getLabelById } from 'src/utils/format-dicts';
 import { SelectAllVideos } from 'src/utils/string-pool';
 
 import { pages } from 'src/modes/pages';
-import { Video } from 'src/modes/video';
 import { getVideos, deleteVideos } from 'src/api/video-service';
+import { Video, types, regions, channels, languages } from 'src/modes/video';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
+import { LightTooltip } from 'src/components/utils/light-tooltip';
 
 import AddVideoForm from '../add-video-form';
+import VideosFilters from '../video-filters';
 
 export default function VideosPage() {
   const [order, setOrder] = useState('desc');
@@ -52,23 +59,15 @@ export default function VideosPage() {
   const headLabel = [
     { id: 'Id', label: 'Id' },
     { id: 'VideoName', label: 'VideoName', minWidth: 180 },
-    { id: 'Channel', label: 'Channel', minWidth: 180 },
-    { id: 'Type', label: 'Type', minWidth: 130 },
-    { id: 'Year', label: 'Year', minWidth: 180 },
-    { id: 'Region', label: 'Region', minWidth: 180 },
-    { id: 'Language', label: 'Language', minWidth: 180 },
+    { id: 'Channel', label: 'Channel', minWidth: 60 },
+    { id: 'Type', label: 'Type', minWidth: 60 },
+    { id: 'Year', label: 'Year', minWidth: 60 },
+    { id: 'Region', label: 'Region', minWidth: 60 },
+    { id: 'Language', label: 'Language', minWidth: 60 },
     { id: 'CreateTime', label: 'CreateTime', minWidth: 180, align: 'center', width: 180 },
     { id: '' },
   ];
 
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelecteds = videos.map((n) => n.id);
-      setSelectedAll(newSelecteds);
-      return;
-    }
-    setSelectedAll([]);
-  };
   const handleSort = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>, id: string) => {
     const isAsc = orderBy === id && order === 'asc';
     if (id !== '') {
@@ -102,6 +101,7 @@ export default function VideosPage() {
   };
   const handleCloseMenu = () => {
     setOpen(null);
+    setInitialData(null);
   };
 
   // Paging parameter
@@ -118,21 +118,40 @@ export default function VideosPage() {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
+  const handleFilterByName = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    setPage(0);
+    setFilterName(event.target.value);
+  };
+  const [filterName, setFilterName] = useState('');
+
+  const [openFilter, setOpenFilter] = useState(false);
+  const [filterDatas, setFilterDatas] = useState<object>({});
+  const handleCloseFilter = (data: object) => {
+    setFilterDatas(data);
+    setOpenFilter(false);
+  };
+
   const {
     data: responesData,
     isLoading,
     isError,
     isSuccess,
   } = useQuery<pages<Video>>({
-    queryKey: [SelectAllVideos, page, rowsPerPage, orderBy, order],
+    queryKey: [SelectAllVideos, page, rowsPerPage, orderBy, order, filterDatas, filterName],
     queryFn: () =>
-      getVideos({ pageNumber: page, pageSize: rowsPerPage, sortField: orderBy, sortOrder: order }),
+      getVideos({
+        pageNumber: page,
+        pageSize: rowsPerPage,
+        sortField: orderBy,
+        sortOrder: order,
+        ...filterDatas,
+        videoName: filterName,
+      }),
     placeholderData: keepPreviousData,
   });
 
   useEffect(() => {
     if (!isLoading && !isError && responesData) {
-      console.log(responesData);
       setVideos(responesData.items);
       setTotalItems(responesData.totalItems);
     }
@@ -145,9 +164,12 @@ export default function VideosPage() {
       queryClient.invalidateQueries({ queryKey: [SelectAllVideos] });
     },
   });
-  const handleDeleteMenu = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, id: number) => {
-    console.log(id);
-    setDeleteIds([id]);
+  const handleDeleteIcon = (ids: number[]) => {
+    setDeleteIds(ids);
+    setOpenDialog(true);
+  };
+  const handleDeleteMenu = (ids: number[]) => {
+    setDeleteIds(ids);
     setOpenDialog(true);
     handleCloseMenu();
   };
@@ -162,9 +184,11 @@ export default function VideosPage() {
   };
   const handleConfirmDelete = () => {
     mutateDelete(deleteIds, {
-      onSuccess: () => {
+      onSuccess: ({ deletedIds }) => {
         handleCloseDialog();
         showNotification('删除成功', 'success');
+        const updatedSelectedAll = selectedAll.filter((id) => !deletedIds.includes(id));
+        setSelectedAll(updatedSelectedAll);
       },
       onError: () => {
         showNotification('删除失败', 'error');
@@ -173,6 +197,17 @@ export default function VideosPage() {
   };
 
   const [openVideoForm, setOpenVideoForm] = useState(false);
+  const [initialData, setInitialData] = useState(null as null | Video);
+  const handleOpenEdit = (_initialData?: Video) => {
+    setOpenVideoForm(true);
+    if (_initialData) {
+      setInitialData(_initialData);
+    }
+  };
+  const handleCloseEdit = () => {
+    setOpenVideoForm(false);
+    handleCloseMenu();
+  };
 
   return (
     <Container>
@@ -182,25 +217,66 @@ export default function VideosPage() {
           variant="contained"
           color="primary"
           startIcon={<Iconify icon="material-symbols:add" />}
-          onClick={() => setOpenVideoForm(true)}
+          onClick={() => handleOpenEdit()}
         >
           Add
         </Button>
       </Stack>
 
       <Card>
+        <Toolbar
+          sx={{
+            height: 60,
+            display: 'flex',
+            justifyContent: 'space-between',
+            p: (theme) => theme.spacing(0, 1, 0, 3),
+            ...(selectedAll.length > 0 && {
+              color: 'primary.main',
+              bgcolor: 'primary.lighter',
+            }),
+          }}
+        >
+          {selectedAll.length > 0 ? (
+            <Typography component="div" variant="subtitle1">
+              {selectedAll.length} selected
+            </Typography>
+          ) : (
+            <OutlinedInput
+              size="small"
+              value={filterName}
+              onChange={(e) => handleFilterByName(e)}
+              placeholder="Search"
+              startAdornment={
+                <InputAdornment position="start">
+                  <Iconify
+                    icon="eva:search-fill"
+                    sx={{ color: 'text.disabled', width: 20, height: 20 }}
+                  />
+                </InputAdornment>
+              }
+            />
+          )}
+          {selectedAll.length > 0 ? (
+            <Tooltip title="Delete">
+              <IconButton onClick={() => handleDeleteIcon(selectedAll)}>
+                <Iconify icon="eva:trash-2-fill" />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <VideosFilters
+              openFilter={openFilter}
+              onOpenFilter={() => setOpenFilter(true)}
+              onCloseFilter={(data) => handleCloseFilter(data)}
+            />
+          )}
+        </Toolbar>
+
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
               <TableHead>
-                <TableRow key={-1}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      indeterminate={selectedAll.length > 0 && selectedAll.length < videos.length}
-                      checked={videos.length > 0 && selectedAll.length === videos.length}
-                      onChange={handleSelectAllClick}
-                    />
-                  </TableCell>
+                <TableRow key={0}>
+                  <TableCell padding="checkbox" />
 
                   {headLabel.map((headCell) => (
                     <TableCell
@@ -275,12 +351,16 @@ export default function VideosPage() {
                       <TableCell component="th" scope="row">
                         {row.id}
                       </TableCell>
-                      <TableCell>{row.videoName}</TableCell>
-                      <TableCell>{row.channel}</TableCell>
-                      <TableCell>{row.type}</TableCell>
+                      <TableCell sx={{ maxWidth: 200 }}>
+                        <LightTooltip title={row.videoName} placement="bottom-start">
+                          <Typography component="span">{row.videoName}</Typography>
+                        </LightTooltip>
+                      </TableCell>
+                      <TableCell>{getLabelById(channels, row.channel)}</TableCell>
+                      <TableCell>{getLabelById(types, row.type)}</TableCell>
                       <TableCell>{row.year}</TableCell>
-                      <TableCell>{row.region}</TableCell>
-                      <TableCell>{row.language}</TableCell>
+                      <TableCell>{getLabelById(regions, row.region)}</TableCell>
+                      <TableCell>{getLabelById(languages, row.language)}</TableCell>
                       <TableCell align="center">
                         {format(new Date(row.createTime), 'yyyy-MM-dd HH:mm:ss')}
                       </TableCell>
@@ -357,7 +437,11 @@ export default function VideosPage() {
 
       <Dialog open={!!openDialog} onClose={handleCloseDialog} disableEscapeKeyDown={false}>
         <DialogContent>
-          <DialogContentText>Are you sure you want to delete this item?</DialogContentText>
+          <DialogContentText>
+            <Typography sx={{ mx: { md: 10, xs: 2 } }} variant="body1">
+              Are you sure to delete?
+            </Typography>
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={(e) => handleCloseDialog(e)} color="primary" autoFocus>
@@ -394,12 +478,20 @@ export default function VideosPage() {
           },
         }}
       >
-        <MenuItem onClick={(e) => handleDeleteMenu(e, MenuId)} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={() => handleOpenEdit(videos.find((item) => item.id === MenuId))}>
+          <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
+          Edit
+        </MenuItem>
+        <MenuItem onClick={() => handleDeleteMenu([MenuId])} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           Delete
         </MenuItem>
       </Popover>
-      <AddVideoForm open={openVideoForm} onClose={() => setOpenVideoForm(false)} />
+      <AddVideoForm
+        initialData={initialData}
+        open={openVideoForm}
+        onClose={() => handleCloseEdit()}
+      />
     </Container>
   );
 }

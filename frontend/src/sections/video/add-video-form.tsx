@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import {
   Box,
+  Chip,
   Dialog,
   Button,
   MenuItem,
@@ -20,70 +21,84 @@ import { useNotification } from 'src/hooks/notification-context';
 import { SelectAllVideos } from 'src/utils/string-pool';
 
 import { FileInfo } from 'src/modes/fileInfo';
-import { addVideos } from 'src/api/video-service';
 import { uploadFile } from 'src/api/file-service';
-import { types, regions, channels, languages, Video } from 'src/modes/video';
+import { addVideo, updateVideo } from 'src/api/video-service';
+import { types, Video, regions, channels, languages } from 'src/modes/video';
 
 interface AddVideoFormProps {
   open: boolean;
   onClose: () => void;
+  initialData?: Video | null;
 }
 
-const AddVideoForm: React.FC<AddVideoFormProps> = ({ open, onClose }) => {
-  const [uploading, setUploading] = useState(false);
+const AddVideoForm: React.FC<AddVideoFormProps> = ({ open, onClose, initialData }) => {
+  const [uploading, setUploading] = useState('' as string);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadedFile, setUploadedFile] = useState({} as null | FileInfo);
+  const [uploadedFile, setUploadedFile] = useState(null as null | FileInfo);
 
   const {
     control,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm();
+    setValue,
+  } = useForm<Video>();
 
   const { showNotification } = useNotification();
 
   const queryClient = useQueryClient();
-  const { isPending, mutate: mutateAdd } = useMutation({
-    mutationFn: addVideos,
+  const { isPending: isAdding, mutate: mutateAdd } = useMutation({
+    mutationFn: addVideo,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [SelectAllVideos] });
       showNotification('Video added successfully', 'success');
-      reset();
+      reset({});
       onClose();
     },
     onError: () => {
       showNotification('Failed to add video', 'error');
     },
   });
+  const { isPending: isUpdating, mutate: mutateUpdate } = useMutation({
+    mutationFn: updateVideo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [SelectAllVideos] });
+      showNotification('Video updated successfully', 'success');
+      reset({});
+      onClose();
+    },
+    onError: () => {
+      showNotification('Failed to update video', 'error');
+    },
+  });
 
-  const onSubmit = (data: object) => {
-    const videoData = data as Video;
+  const onSubmit = (data: Video) => {
     if (uploadedFile) {
-      videoData.fileInfo = uploadedFile;
+      data.fileInfo = uploadedFile;
     }
-    mutateAdd(videoData);
+    if (initialData) {
+      mutateUpdate({ ...initialData, ...data });
+    } else {
+      mutateAdd(data);
+    }
   };
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
     if (file) {
-      setUploading(true);
+      setUploading(file.name);
       try {
-        const response = await uploadFile(file, (event2) => {
-          let total = 1;
-          if (event2.total) {
-            // eslint-disable-next-line prefer-destructuring
-            total = event2.total;
+        const response = await uploadFile(file, ({ total, loaded }) => {
+          if (total) {
+            setUploadProgress(Math.round((100 * loaded) / total));
           }
-          setUploadProgress(Math.round((100 * event2.loaded) / total));
         });
         setUploadedFile(response);
         showNotification('File uploaded successfully', 'success');
       } catch (error) {
         showNotification('Failed to upload file', 'error');
       } finally {
-        setUploading(false);
+        setUploading('');
       }
     }
   };
@@ -93,9 +108,29 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ open, onClose }) => {
     setUploadProgress(0);
   };
 
+  useEffect(() => {
+    if (initialData) {
+      reset(initialData);
+      setUploadedFile(initialData.fileInfo);
+    } else {
+      reset({
+        id: undefined,
+        videoName: '',
+        channel: '',
+        type: '',
+        year: '',
+        region: '',
+        language: '',
+        intro: '',
+        createTime: undefined,
+      });
+      setUploadedFile(null);
+    }
+  }, [initialData, reset, setValue]);
+
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Add New Video</DialogTitle>
+      <DialogTitle>{initialData ? 'Edit Video' : 'Add New Video'}</DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Controller
@@ -169,8 +204,6 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ open, onClose }) => {
             defaultValue=""
             rules={{
               required: 'Year is required',
-              min: { value: 1900, message: 'Year must be after 1900' },
-              max: { value: new Date().getFullYear(), message: 'Year cannot be in the future' },
             }}
             render={({ field }) => (
               <TextField
@@ -262,19 +295,32 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ open, onClose }) => {
               onChange={handleFileChange}
             />
             <label htmlFor="upload-file">
-              <Button variant="contained" component="span" disabled={uploading} sx={{ mr: 2 }}>
-                {uploadedFile ? 'Change File' : 'Upload File'}
+              <Button
+                variant="contained"
+                component="span"
+                disabled={!!uploading}
+                sx={{ mr: 2, mb: 2 }}
+              >
+                {uploadedFile ? `Change File` : 'Upload File'}
               </Button>
             </label>
-            {uploading && <LinearProgress variant="determinate" value={uploadProgress} />}
-            {uploadedFile && (
-              <Box>
-                <Box>{uploadedFile.name}</Box>
-                <Button onClick={handleDeleteFile} color="error">
-                  Delete File
-                </Button>
-              </Box>
-            )}
+
+            <Box>
+              {uploadedFile && (
+                <Chip
+                  sx={{ mb: 1 }}
+                  color="success"
+                  label={uploadedFile.name}
+                  onDelete={handleDeleteFile}
+                />
+              )}
+              {!!uploading && (
+                <>
+                  <Chip sx={{ mb: 1 }} label={uploading} onDelete={handleDeleteFile} />
+                  <LinearProgress variant="determinate" value={uploadProgress} />
+                </>
+              )}
+            </Box>
           </Box>
         </form>
       </DialogContent>
@@ -283,10 +329,10 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ open, onClose }) => {
           Cancel
         </Button>
         <Box sx={{ m: 1, position: 'relative' }}>
-          <Button onClick={handleSubmit(onSubmit)} disabled={isPending || uploading}>
-            Add
+          <Button onClick={handleSubmit(onSubmit)} disabled={isAdding || isUpdating || !!uploading}>
+            {initialData ? 'Update' : 'Add'}
           </Button>
-          {(isPending || uploading) && (
+          {(isAdding || isUpdating || !!uploading) && (
             <CircularProgress
               size={24}
               sx={{

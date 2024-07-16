@@ -21,18 +21,51 @@ namespace Ofps.Controllers
             int pageNumber = 0,
             int pageSize = 10,
             string? sortField = null,
-            string? sortOrder = null
+            string? sortOrder = null,
+            [FromQuery] VideoFilter? filter = null
             )
         {
-            var totalItems = await _context.Videos.CountAsync();
-            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
             var query = _context.Videos.AsQueryable();
+
+            // Apply filters
+            if (filter != null)
+            {
+                if (filter.Types != null && filter.Types.Any())
+                {
+                    query = query.Where(v => filter.Types.Contains(v.Type));
+                }
+                if (filter.Channels != null && filter.Channels.Any())
+                {
+                    query = query.Where(v => filter.Channels.Contains(v.Channel));
+                }
+                if (filter.Regions != null && filter.Regions.Any())
+                {
+                    query = query.Where(v => filter.Regions.Contains(v.Region));
+                }
+                if (filter.Languages != null && filter.Languages.Any())
+                {
+                    query = query.Where(v => filter.Languages.Contains(v.Language));
+                }
+                if (!string.IsNullOrEmpty(filter.VideoName))
+                {
+                    query = query.Where(v => v.VideoName.Contains(filter.VideoName));
+                }
+            }
+
+            // Get the total count after filtering
+            var totalItems = await query.CountAsync();
+
+            // Apply sorting
             if (!string.IsNullOrEmpty(sortField) && !string.IsNullOrEmpty(sortOrder))
             {
                 var sortExpression = $"{sortField} {(sortOrder.Equals("desc", StringComparison.CurrentCultureIgnoreCase) ? "descending" : "ascending")}";
                 query = query.OrderBy(sortExpression);
             }
+
+            // Apply pagination
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
             var result = await query
+                            .Include(v => v.FileInfo)
                             .Skip(pageNumber * pageSize)
                             .Take(pageSize)
                             .ToListAsync();
@@ -84,6 +117,10 @@ namespace Ofps.Controllers
                 return BadRequest();
             }
 
+            var fileInfo = new Models.FileInfo { Id = video.FileInfo.Id };
+            _context.Entry(fileInfo).State = EntityState.Unchanged;
+            video.FileInfo = fileInfo;
+
             _context.Entry(video).State = EntityState.Modified;
 
             try
@@ -129,4 +166,15 @@ namespace Ofps.Controllers
             return _context.Videos.Any(e => e.Id == id);
         }
     }
+
+    public class VideoFilter
+    {
+        public string[]? Types { get; set; }
+        public string[]? Channels { get; set; }
+        public string[]? Regions { get; set; }
+        public string[]? Languages { get; set; }
+        public string? VideoName { get; set; }
+    }
+
+
 }

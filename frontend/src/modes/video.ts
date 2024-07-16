@@ -1,3 +1,5 @@
+import { Dict } from 'src/utils/format-dicts';
+
 import { FileInfo } from './fileInfo';
 
 export interface Video {
@@ -13,7 +15,7 @@ export interface Video {
   fileInfo: FileInfo;
 }
 
-export const types = [
+export const types: Dict[] = [
   { id: '1', label: '喜剧' },
   { id: '2', label: '爱情' },
   { id: '3', label: '恐怖' },
@@ -23,7 +25,7 @@ export const types = [
   { id: '7', label: '其他' },
 ];
 
-export const channels = [
+export const channels: Dict[] = [
   { id: '1', label: '电影' },
   { id: '2', label: '戏剧' },
   { id: '3', label: '动漫' },
@@ -31,7 +33,7 @@ export const channels = [
   { id: '5', label: '其他' },
 ];
 
-export const regions = [
+export const regions: Dict[] = [
   { id: '1', label: '中国' },
   { id: '2', label: '美国' },
   { id: '3', label: '法国' },
@@ -40,7 +42,7 @@ export const regions = [
   { id: '6', label: '其他' },
 ];
 
-export const languages = [
+export const languages: Dict[] = [
   { id: '1', label: '汉语' },
   { id: '2', label: '英语' },
   { id: '3', label: '汉语' },

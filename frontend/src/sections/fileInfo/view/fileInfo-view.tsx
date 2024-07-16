@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 
 import Box from '@mui/material/Box';
@@ -23,8 +23,12 @@ import TableCell, { SortDirection } from '@mui/material/TableCell';
 import {
   Paper,
   Dialog,
+  Toolbar,
+  Tooltip,
   DialogActions,
   DialogContent,
+  OutlinedInput,
+  InputAdornment,
   CircularProgress,
   DialogContentText,
 } from '@mui/material';
@@ -40,6 +44,7 @@ import { getFiles, deleteFiles } from 'src/api/file-service';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
+import { LightTooltip } from 'src/components/utils/light-tooltip';
 
 export default function FileInfoPage() {
   const [order, setOrder] = useState('desc');
@@ -58,14 +63,12 @@ export default function FileInfoPage() {
     { id: '' },
   ];
 
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelecteds = fileInfos.map((n) => n.id);
-      setSelectedAll(newSelecteds);
-      return;
-    }
-    setSelectedAll([]);
+  const handleFilterByName = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    setPage(0);
+    setFilterName(event.target.value);
   };
+  const [filterName, setFilterName] = useState('');
+
   const handleSort = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>, id: string) => {
     const isAsc = orderBy === id && order === 'asc';
     if (id !== '') {
@@ -121,15 +124,20 @@ export default function FileInfoPage() {
     isError,
     isSuccess,
   } = useQuery<pages<FileInfo>>({
-    queryKey: [SelectAllFileInfos, page, rowsPerPage, orderBy, order],
+    queryKey: [SelectAllFileInfos, page, rowsPerPage, orderBy, order, filterName],
     queryFn: () =>
-      getFiles({ pageNumber: page, pageSize: rowsPerPage, sortField: orderBy, sortOrder: order }),
+      getFiles({
+        pageNumber: page,
+        pageSize: rowsPerPage,
+        sortField: orderBy,
+        sortOrder: order,
+        name: filterName,
+      }),
     placeholderData: keepPreviousData,
   });
 
   useEffect(() => {
     if (!isLoading && !isError && pageFileInfos) {
-      console.log(pageFileInfos);
       setFileInfos(pageFileInfos.items);
       setTotalItems(pageFileInfos.totalItems);
     }
@@ -143,7 +151,6 @@ export default function FileInfoPage() {
     },
   });
   const handleDeleteMenu = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, id: number) => {
-    console.log(id);
     setDeleteIds([id]);
     setOpenDialog(true);
     handleCloseMenu();
@@ -159,9 +166,11 @@ export default function FileInfoPage() {
   };
   const handleConfirmDelete = () => {
     mutate(deleteIds, {
-      onSuccess: () => {
+      onSuccess: ({ deletedIds }) => {
         handleCloseDialog();
         showNotification('删除成功', 'success');
+        const updatedSelectedAll = selectedAll.filter((id) => !deletedIds.includes(id));
+        setSelectedAll(updatedSelectedAll);
       },
       onError: () => {
         showNotification('删除失败', 'error');
@@ -169,6 +178,10 @@ export default function FileInfoPage() {
     });
   };
 
+  const handleDeleteIcon = (ids: number[]) => {
+    setDeleteIds(ids);
+    setOpenDialog(true);
+  };
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -176,20 +189,53 @@ export default function FileInfoPage() {
       </Stack>
 
       <Card>
+        <Toolbar
+          sx={{
+            height: 60,
+            display: 'flex',
+            justifyContent: 'space-between',
+            p: (theme) => theme.spacing(0, 1, 0, 3),
+            ...(selectedAll.length > 0 && {
+              color: 'primary.main',
+              bgcolor: 'primary.lighter',
+            }),
+          }}
+        >
+          {selectedAll.length > 0 ? (
+            <Typography component="div" variant="subtitle1">
+              {selectedAll.length} selected
+            </Typography>
+          ) : (
+            <OutlinedInput
+              size="small"
+              value={filterName}
+              onChange={(e) => handleFilterByName(e)}
+              placeholder="Search"
+              startAdornment={
+                <InputAdornment position="start">
+                  <Iconify
+                    icon="eva:search-fill"
+                    sx={{ color: 'text.disabled', width: 20, height: 20 }}
+                  />
+                </InputAdornment>
+              }
+            />
+          )}
+          {selectedAll.length > 0 && (
+            <Tooltip title="Delete">
+              <IconButton onClick={() => handleDeleteIcon(selectedAll)}>
+                <Iconify icon="eva:trash-2-fill" />
+              </IconButton>
+            </Tooltip>
+          )}
+        </Toolbar>
+
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
               <TableHead>
                 <TableRow key={-1}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      indeterminate={
-                        selectedAll.length > 0 && selectedAll.length < fileInfos.length
-                      }
-                      checked={fileInfos.length > 0 && selectedAll.length === fileInfos.length}
-                      onChange={handleSelectAllClick}
-                    />
-                  </TableCell>
+                  <TableCell padding="checkbox" />
 
                   {headLabel.map((headCell) => (
                     <TableCell
@@ -265,9 +311,17 @@ export default function FileInfoPage() {
                         {row.id}
                       </TableCell>
 
-                      <TableCell>{row.name}</TableCell>
+                      <TableCell sx={{ maxWidth: 200 }}>
+                        <LightTooltip title={row.name} placement="bottom-start">
+                          <Typography component="span">{row.name}</Typography>
+                        </LightTooltip>
+                      </TableCell>
 
-                      <TableCell>{row.localPath}</TableCell>
+                      <TableCell sx={{ maxWidth: 200 }}>
+                        <LightTooltip title={row.localPath} placement="bottom-start">
+                          <Typography component="span">{row.localPath}</Typography>
+                        </LightTooltip>
+                      </TableCell>
 
                       <TableCell>{formatFileSize(row.size)}</TableCell>
 
@@ -349,7 +403,11 @@ export default function FileInfoPage() {
 
       <Dialog open={!!openDialog} onClose={handleCloseDialog} disableEscapeKeyDown={false}>
         <DialogContent>
-          <DialogContentText>Are you sure you want to delete this item?</DialogContentText>
+          <DialogContentText>
+            <Typography sx={{ mx: { md: 10, xs: 2 } }} variant="body1">
+              Are you sure to delete?
+            </Typography>
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={(e) => handleCloseDialog(e)} color="primary" autoFocus>

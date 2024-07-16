@@ -5,18 +5,8 @@
     "es2021": true
   },
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "perfectionist",
-    "unused-imports",
-    "prettier",
-    "@typescript-eslint"
-  ],
-  "extends": [
-    "airbnb",
-    "airbnb/hooks",
-    "prettier",
-    "plugin:@typescript-eslint/recommended"
-  ],
+  "plugins": ["perfectionist", "unused-imports", "prettier", "@typescript-eslint"],
+  "extends": ["airbnb", "airbnb/hooks", "prettier", "plugin:@typescript-eslint/recommended"],
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",
@@ -30,27 +20,11 @@
     },
     "import/resolver": {
       "alias": {
-        "map": [
-          [
-            "src",
-            "./src"
-          ]
-        ],
-        "extensions": [
-          ".js",
-          ".jsx",
-          ".json",
-          ".ts",
-          ".tsx"
-        ]
+        "map": [["src", "./src"]],
+        "extensions": [".js", ".jsx", ".json", ".ts", ".tsx"]
       },
       "node": {
-        "extensions": [
-          ".js",
-          ".jsx",
-          ".ts",
-          ".tsx"
-        ]
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
     }
   },
@@ -74,10 +48,7 @@
     "react/jsx-filename-extension": [
       1,
       {
-        "extensions": [
-          ".jsx",
-          ".tsx"
-        ]
+        "extensions": [".jsx", ".tsx"]
       }
     ],
     "react/jsx-props-no-spreading": 0,
@@ -153,10 +124,7 @@
         "type": "line-length",
         "newlines-between": "always",
         "groups": [
-          [
-            "builtin",
-            "external"
-          ],
+          ["builtin", "external"],
           "custom-mui",
           "custom-routes",
           "custom-hooks",
@@ -165,11 +133,7 @@
           "custom-components",
           "custom-sections",
           "custom-types",
-          [
-            "parent",
-            "sibling",
-            "index"
-          ],
+          ["parent", "sibling", "index"],
           "object",
           "unknown"
         ],
@@ -184,9 +148,7 @@
             "custom-types": "src/types/**"
           }
         },
-        "internal-pattern": [
-          "src/**"
-        ]
+        "internal-pattern": ["src/**"]
       }
     ],
     "import/extensions": [
@@ -198,6 +160,7 @@
         "js": "never",
         "jsx": "never"
       }
-    ]
+    ],
+    "react-hooks/exhaustive-deps": "off"
   }
 }
