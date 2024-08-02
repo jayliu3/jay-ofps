@@ -16,7 +16,7 @@ import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
 
 import { NAV } from './config-layout';
-import navConfig, { navConfigItem } from './config-navigation';
+import NavConfig, { navConfigItem } from './config-navigation';
 
 // ----------------------------------------------------------------------
 interface NavProps {
@@ -26,7 +26,7 @@ interface NavProps {
 
 export default function Nav({ openNav, onCloseNav }: NavProps) {
   const pathname = usePathname();
-
+  const navConfig = NavConfig();
   const upLg = useResponsive('up', 'lg');
 
   useEffect(() => {
