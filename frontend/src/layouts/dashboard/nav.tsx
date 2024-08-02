@@ -55,7 +55,7 @@ export default function Nav({ openNav, onCloseNav }: NavProps) {
         },
       }}
     >
-      <Logo sx={{ mt: 3, ml: 4 }} />
+      <Logo sx={{ mt: 0, ml: 10 }} />
 
       {renderMenu}
 

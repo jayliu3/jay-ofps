@@ -11,7 +11,6 @@ import { bgBlur } from 'src/theme/css';
 
 import Iconify from 'src/components/iconify';
 
-import Searchbar from './common/searchbar';
 import { NAV, HEADER } from './config-layout';
 import LanguagePopover from './common/language-popover';
 
@@ -32,8 +31,6 @@ const Header: React.FC<HeaderProps> = ({ onOpenNav }: HeaderProps) => {
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
       )}
-
-      <Searchbar />
 
       <Box sx={{ flexGrow: 1 }} />
 
