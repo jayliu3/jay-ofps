@@ -27,7 +27,7 @@ const navConfig: Array<navConfigItem> = [
   {
     title: 'video',
     path: '/video',
-    icon: <Iconify icon="material-symbols:hangout-video-outline" width={24} />,
+    icon: <Iconify icon="material-symbols:hangout-video-rounded" width={24} />,
   },
   {
     title: 'user',

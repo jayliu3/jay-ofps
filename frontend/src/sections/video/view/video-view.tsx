@@ -211,7 +211,7 @@ export default function VideosPage() {
 
   return (
     <Container>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
         <Typography variant="h4">Videos</Typography>
         <Button
           variant="contained"
@@ -273,7 +273,7 @@ export default function VideosPage() {
 
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
-            <Table sx={{ minWidth: 800 }}>
+            <Table sx={{ minWidth: 800 }} size="small">
               <TableHead>
                 <TableRow key={0}>
                   <TableCell padding="checkbox" />
