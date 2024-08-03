@@ -37,7 +37,7 @@ export default function Nav({ openNav, onCloseNav }: NavProps) {
   }, [pathname]);
 
   const renderMenu = (
-    <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
+    <Stack component="nav">
       {navConfig.map((item) => (
         <NavItem key={item.title} item={item} />
       ))}
@@ -76,7 +76,7 @@ export default function Nav({ openNav, onCloseNav }: NavProps) {
             height: 1,
             position: 'fixed',
             width: NAV.WIDTH,
-            borderRight: (theme) => `dashed 1px ${theme.palette.divider}`,
+            borderRight: (theme) => `solid 1px ${theme.palette.divider}`,
           }}
         >
           {renderContent}
@@ -116,7 +116,6 @@ function NavItem({ item }: { item: navConfigItem }) {
       href={item.path}
       sx={{
         minHeight: 44,
-        borderRadius: 0.75,
         typography: 'body2',
         color: 'text.secondary',
         textTransform: 'capitalize',
@@ -124,6 +123,8 @@ function NavItem({ item }: { item: navConfigItem }) {
         ...(active && {
           color: 'primary.main',
           fontWeight: 'fontWeightSemiBold',
+          borderRight: (theme) =>
+            `3px solid ${active ? theme.palette.primary.main : 'transparent'}`,
           bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
           '&:hover': {
             bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),

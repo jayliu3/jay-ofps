@@ -1,8 +1,5 @@
 import { PaletteMode } from '@mui/material';
 import { alpha } from '@mui/material/styles';
-// ----------------------------------------------------------------------
-
-// SETUP COLORS
 
 export const grey = {
   0: '#FFFFFF',
@@ -18,56 +15,56 @@ export const grey = {
 };
 
 export const primary = {
-  lighter: '#D0ECFE',
-  light: '#73BAFB',
-  main: '#1877F2',
-  dark: '#0C44AE',
-  darker: '#042174',
+  lighter: '#E1F5E4',
+  light: '#A0E3B8',
+  main: '#8BC34A',
+  dark: '#5A8F2D',
+  darker: '#4A6D23',
   contrastText: '#FFFFFF',
 };
 
 export const secondary = {
-  lighter: '#EFD6FF',
-  light: '#C684FF',
-  main: '#8E33FF',
-  dark: '#5119B7',
-  darker: '#27097A',
+  lighter: '#F3E5F5',
+  light: '#D1A1E4',
+  main: '#AB47BC',
+  dark: '#6A1B9A',
+  darker: '#4A0072',
   contrastText: '#FFFFFF',
 };
 
 export const info = {
-  lighter: '#CAFDF5',
-  light: '#61F3F3',
-  main: '#00B8D9',
-  dark: '#006C9C',
-  darker: '#003768',
+  lighter: '#E3F2FD',
+  light: '#64B5F6',
+  main: '#2196F3',
+  dark: '#1976D2',
+  darker: '#0D47A1',
   contrastText: '#FFFFFF',
 };
 
 export const success = {
-  lighter: '#C8FAD6',
-  light: '#5BE49B',
-  main: '#00A76F',
-  dark: '#007867',
-  darker: '#004B50',
+  lighter: '#C8E6C9',
+  light: '#81C784',
+  main: '#4CAF50',
+  dark: '#388E3C',
+  darker: '#1B5E20',
   contrastText: '#FFFFFF',
 };
 
 export const warning = {
-  lighter: '#FFF5CC',
-  light: '#FFD666',
-  main: '#FFAB00',
-  dark: '#B76E00',
-  darker: '#7A4100',
+  lighter: '#FFF9C4',
+  light: '#FFF176',
+  main: '#FFEB3B',
+  dark: '#FBC02D',
+  darker: '#F57F17',
   contrastText: grey[800],
 };
 
 export const error = {
-  lighter: '#FFE9D5',
-  light: '#FFAC82',
-  main: '#FF5630',
-  dark: '#B71D18',
-  darker: '#7A0916',
+  lighter: '#FFCDD2',
+  light: '#EF9A9A',
+  main: '#F44336',
+  dark: '#D32F2F',
+  darker: '#B71C1C',
   contrastText: '#FFFFFF',
 };
 
@@ -99,30 +96,31 @@ const base = {
   action,
 };
 
-// ----------------------------------------------------------------------
 declare module '@mui/material/styles/createPalette' {
   interface TypeBackground {
     neutral: string;
   }
 }
 
-export function palette() {
+export function palette(mode: PaletteMode) {
+  const isLight = mode === 'light';
+
   return {
     ...base,
-    mode: 'light' as PaletteMode,
+    mode,
     text: {
-      primary: grey[800],
-      secondary: grey[600],
+      primary: isLight ? grey[800] : grey[100],
+      secondary: isLight ? grey[600] : grey[300],
       disabled: grey[500],
     },
     background: {
-      paper: '#FFFFFF',
-      default: grey[100],
-      neutral: grey[200],
+      paper: isLight ? '#FFFFFF' : grey[800],
+      default: isLight ? grey[100] : grey[900],
+      neutral: isLight ? grey[200] : grey[700],
     },
     action: {
       ...base.action,
-      active: grey[600],
+      active: isLight ? grey[600] : grey[400],
     },
   };
 }

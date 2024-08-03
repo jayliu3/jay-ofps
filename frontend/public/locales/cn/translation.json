@@ -81,5 +81,6 @@
     "Size": "大小",
     "CreateTime": "创建时间",
     "FileType": "文件类型",
-    "VideoName": "视频名称"
+    "VideoName": "视频名称",
+    "Update":"修改"
 }

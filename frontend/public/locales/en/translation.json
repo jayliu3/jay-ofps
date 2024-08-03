@@ -81,6 +81,7 @@
     "Size":"Size",
     "CreateTime":"CreateTime",
     "FileType":"FileType",
-    "VideoName":"VideoName"
+    "VideoName":"VideoName",
+    "Update":"Update"
 
 }

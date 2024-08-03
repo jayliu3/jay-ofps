@@ -336,7 +336,7 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ open, onClose, initialData 
         </Button>
         <Box sx={{ m: 1, position: 'relative' }}>
           <Button onClick={handleSubmit(onSubmit)} disabled={isAdding || isUpdating || !!uploading}>
-            {initialData ? 'Update' : 'Add'}
+            {initialData ? t('Update') : t('Add')}
           </Button>
           {(isAdding || isUpdating || !!uploading) && (
             <CircularProgress

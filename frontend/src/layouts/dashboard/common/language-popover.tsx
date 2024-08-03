@@ -53,9 +53,24 @@ export default function LanguagePopover() {
           width: 40,
           height: 40,
           bgcolor: open ? 'action.selected' : 'inherit',
+          border: '1px solid',
+          borderColor: 'primary.main',
+          borderRadius: '50%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          p: 0,
         }}
       >
-        <img src={LANGS.find((lang) => lang.value === i18n.language)?.icon} alt="language" />
+        <img
+          src={LANGS.find((lang) => lang.value === i18n.language)?.icon}
+          alt="language"
+          style={{
+            width: '60%',
+            height: '60%',
+            objectFit: 'contain',
+          }}
+        />
       </IconButton>
 
       <Popover

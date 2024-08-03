@@ -9,6 +9,7 @@ import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Popover from '@mui/material/Popover';
+import { alpha } from '@mui/material/styles';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
@@ -108,7 +109,7 @@ export default function FileInfoPage() {
 
   // Paging parameter
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(8);
   const [totalItems, setTotalItems] = useState(0);
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
@@ -199,7 +200,7 @@ export default function FileInfoPage() {
             p: (theme) => theme.spacing(0, 1, 0, 3),
             ...(selectedAll.length > 0 && {
               color: 'primary.main',
-              bgcolor: 'primary.lighter',
+              bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),
             }),
           }}
         >
@@ -226,7 +227,10 @@ export default function FileInfoPage() {
           {selectedAll.length > 0 && (
             <Tooltip title="Delete">
               <IconButton onClick={() => handleDeleteIcon(selectedAll)}>
-                <Iconify icon="eva:trash-2-fill" />
+                <Iconify
+                  icon="eva:trash-2-fill"
+                  sx={{ color: (theme) => theme.palette.error.main }}
+                />
               </IconButton>
             </Tooltip>
           )}
@@ -398,7 +402,7 @@ export default function FileInfoPage() {
           count={totalItems}
           rowsPerPage={rowsPerPage}
           onPageChange={(event, newPage) => handleChangePage(event, newPage)}
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[8, 10, 25]}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Card>

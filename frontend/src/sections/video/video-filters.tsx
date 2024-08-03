@@ -154,6 +154,7 @@ export default function VideosFilters({
             variant="outlined"
             startIcon={<Iconify icon="material-symbols:cleaning-services-rounded" />}
             onClick={() => handleClick()}
+            sx={{ color: (theme) => theme.palette.primary.main }}
           >
             {t('Clear All')}
           </Button>

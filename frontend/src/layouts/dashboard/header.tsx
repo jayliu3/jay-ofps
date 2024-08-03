@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import { useResponsive } from 'src/hooks/use-responsive';
 
 import { bgBlur } from 'src/theme/css';
+import { useThemeContext } from 'src/theme';
 
 import Iconify from 'src/components/iconify';
 
@@ -21,6 +22,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onOpenNav }: HeaderProps) => {
   const theme = useTheme();
+  const { toggleTheme, mode } = useThemeContext();
 
   const lgUp = useResponsive('up', 'lg');
 
@@ -35,6 +37,22 @@ const Header: React.FC<HeaderProps> = ({ onOpenNav }: HeaderProps) => {
       <Box sx={{ flexGrow: 1 }} />
 
       <Stack direction="row" alignItems="center" spacing={1}>
+        <IconButton
+          onClick={toggleTheme}
+          color="primary"
+          sx={{
+            width: 40,
+            height: 40,
+            border: '1px solid',
+            borderColor: 'primary.main',
+            borderRadius: '50%',
+          }}
+        >
+          <Iconify
+            icon={mode === 'light' ? 'material-symbols:light-mode' : 'material-symbols:dark-mode'}
+            sx={{ width: 25, height: 25 }}
+          />
+        </IconButton>
         <LanguagePopover />
       </Stack>
     </>
@@ -43,18 +61,17 @@ const Header: React.FC<HeaderProps> = ({ onOpenNav }: HeaderProps) => {
   return (
     <AppBar
       sx={{
-        boxShadow: 'none',
         height: HEADER.H_MOBILE,
         zIndex: theme.zIndex.appBar + 1,
         transition: theme.transitions.create(['height'], {
           duration: theme.transitions.duration.shorter,
         }),
         ...(lgUp && {
-          width: `calc(100% - ${NAV.WIDTH + 1}px)`,
+          width: `calc(100% - ${NAV.WIDTH}px)`,
           height: HEADER.H_DESKTOP,
         }),
         ...bgBlur({
-          color: theme.palette.background.default,
+          color: theme.palette.background.paper,
         }),
       }}
     >
