@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Box from '@mui/material/Box';
 import { Badge } from '@mui/material';
@@ -9,7 +10,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
-import { types, regions, channels, languages } from 'src/modes/video';
+import { useTypes, useRegions, useChannels, useLanguages } from 'src/modes/video';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -32,6 +33,11 @@ export default function VideosFilters({
   onOpenFilter,
   onCloseFilter,
 }: VideosFiltersProp) {
+  const Regions = useRegions();
+  const Types = useTypes();
+  const Channels = useChannels();
+  const Languages = useLanguages();
+  const { t } = useTranslation();
   const [typesFilters, setTypesFilters] = useState<string[]>([]);
   const [channelsFilters, setChannelsFilters] = useState<string[]>([]);
   const [regionsFilters, setRegionsFilters] = useState<string[]>([]);
@@ -60,7 +66,7 @@ export default function VideosFilters({
           endIcon={<Iconify icon="ic:round-filter-list" />}
           onClick={onOpenFilter}
         >
-          Filters&nbsp;
+          {t('Filters')}&nbsp;
         </Button>
       </Badge>
 
@@ -89,7 +95,7 @@ export default function VideosFilters({
           sx={{ px: 1, py: 2 }}
         >
           <Typography variant="h6" sx={{ ml: 1 }}>
-            Filters
+            {t('Filters')}
           </Typography>
           <IconButton
             onClick={(e) => {
@@ -113,26 +119,26 @@ export default function VideosFilters({
         <Scrollbar>
           <Stack spacing={3} sx={{ p: 3 }}>
             <MultipleSelectChip
-              dicts={types}
-              labelName="types"
+              dicts={Types}
+              labelName={t('Type')}
               handleChange={(datas) => setTypesFilters(datas)}
               selectDicts={typesFilters}
             />
             <MultipleSelectChip
-              dicts={channels}
-              labelName="channels"
+              dicts={Channels}
+              labelName={t('Channel')}
               handleChange={(datas) => setChannelsFilters(datas)}
               selectDicts={channelsFilters}
             />
             <MultipleSelectChip
-              dicts={regions}
-              labelName="regions"
+              dicts={Regions}
+              labelName={t('Region')}
               handleChange={(datas) => setRegionsFilters(datas)}
               selectDicts={regionsFilters}
             />
             <MultipleSelectChip
-              dicts={languages}
-              labelName="languages"
+              dicts={Languages}
+              labelName={t('Language')}
               handleChange={(datas) => setLanguagesFilters(datas)}
               selectDicts={languagesFilters}
             />
@@ -149,7 +155,7 @@ export default function VideosFilters({
             startIcon={<Iconify icon="material-symbols:cleaning-services-rounded" />}
             onClick={() => handleClick()}
           >
-            Clear All
+            {t('Clear All')}
           </Button>
         </Box>
       </Drawer>

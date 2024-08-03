@@ -1,4 +1,5 @@
 import { format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 import { useState, useEffect, ChangeEvent } from 'react';
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 
@@ -47,6 +48,7 @@ import Scrollbar from 'src/components/scrollbar';
 import { LightTooltip } from 'src/components/utils/light-tooltip';
 
 export default function FileInfoPage() {
+  const { t } = useTranslation();
   const [order, setOrder] = useState('desc');
   const [orderBy, setOrderBy] = useState('CreateTime');
   const [selectedAll, setSelectedAll] = useState([] as Array<number>);
@@ -54,12 +56,12 @@ export default function FileInfoPage() {
   const { showNotification } = useNotification();
 
   const headLabel = [
-    { id: 'Id', label: 'Id' },
-    { id: 'Name', label: 'name' },
-    { id: 'LocalPath', label: 'localPath' },
-    { id: 'Size', label: 'size', width: 130, minWidth: 130 },
-    { id: 'CreateTime', label: 'createTime', align: 'center', width: 180, minWidth: 180 },
-    { id: 'FileType', label: 'fileType' },
+    { id: 'Id', label: t('ID') },
+    { id: 'Name', label: t('Name') },
+    { id: 'LocalPath', label: t('LocalPath') },
+    { id: 'Size', label: t('Size'), width: 130, minWidth: 130 },
+    { id: 'CreateTime', label: t('CreateTime'), align: 'center', width: 180, minWidth: 180 },
+    { id: 'FileType', label: t('FileType') },
     { id: '' },
   ];
 
@@ -168,12 +170,12 @@ export default function FileInfoPage() {
     mutate(deleteIds, {
       onSuccess: ({ deletedIds }) => {
         handleCloseDialog();
-        showNotification('删除成功', 'success');
+        showNotification(t('successfully delete'), 'success');
         const updatedSelectedAll = selectedAll.filter((id) => !deletedIds.includes(id));
         setSelectedAll(updatedSelectedAll);
       },
       onError: () => {
-        showNotification('删除失败', 'error');
+        showNotification(t('failed to delete'), 'error');
       },
     });
   };
@@ -185,7 +187,7 @@ export default function FileInfoPage() {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
-        <Typography variant="h4">FileInfo</Typography>
+        <Typography variant="h4">{t('FileInfo')}</Typography>
       </Stack>
 
       <Card>
@@ -203,14 +205,14 @@ export default function FileInfoPage() {
         >
           {selectedAll.length > 0 ? (
             <Typography component="div" variant="subtitle1">
-              {selectedAll.length} selected
+              {selectedAll.length} {t('selected')}
             </Typography>
           ) : (
             <OutlinedInput
               size="small"
               value={filterName}
               onChange={(e) => handleFilterByName(e)}
-              placeholder="Search"
+              placeholder={t('Search')}
               startAdornment={
                 <InputAdornment position="start">
                   <Iconify
@@ -347,10 +349,10 @@ export default function FileInfoPage() {
                         }}
                       >
                         <Typography variant="h6" paragraph>
-                          Not found
+                          {t('Not found')}
                         </Typography>
 
-                        <Typography variant="body2">No results found.</Typography>
+                        <Typography variant="body2">{t('No results found.')}</Typography>
                       </Paper>
                     </TableCell>
                   </TableRow>
@@ -364,7 +366,7 @@ export default function FileInfoPage() {
                         }}
                       >
                         <Typography variant="h6" paragraph>
-                          Loading...
+                          {t('Loading...')}
                         </Typography>
                       </Paper>
                     </TableCell>
@@ -379,7 +381,7 @@ export default function FileInfoPage() {
                         }}
                       >
                         <Typography variant="h6" paragraph>
-                          Error
+                          {t('Error')}
                         </Typography>
                       </Paper>
                     </TableCell>
@@ -405,17 +407,17 @@ export default function FileInfoPage() {
         <DialogContent>
           <DialogContentText>
             <Typography sx={{ mx: { md: 10, xs: 2 } }} variant="body1">
-              Are you sure to delete?
+              {t('Are you sure to delete?')}
             </Typography>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={(e) => handleCloseDialog(e)} color="primary" autoFocus>
-            Cancel
+            {t('Cancel')}
           </Button>
           <Box sx={{ m: 1, position: 'relative' }}>
             <Button onClick={handleConfirmDelete} color="error" disabled={isPending}>
-              Delete
+              {t('Delete')}
             </Button>
             {isPending && (
               <CircularProgress
@@ -446,7 +448,7 @@ export default function FileInfoPage() {
       >
         <MenuItem onClick={(e) => handleDeleteMenu(e, MenuId)} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
-          Delete
+          {t('Delete')}
         </MenuItem>
       </Popover>
     </Container>

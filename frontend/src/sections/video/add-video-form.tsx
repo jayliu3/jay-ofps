@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -23,7 +24,7 @@ import { SelectAllVideos } from 'src/utils/string-pool';
 import { FileInfo } from 'src/modes/fileInfo';
 import { uploadFile } from 'src/api/file-service';
 import { addVideo, updateVideo } from 'src/api/video-service';
-import { types, Video, regions, channels, languages } from 'src/modes/video';
+import { Video, useTypes, useRegions, useChannels, useLanguages } from 'src/modes/video';
 
 interface AddVideoFormProps {
   open: boolean;
@@ -32,6 +33,11 @@ interface AddVideoFormProps {
 }
 
 const AddVideoForm: React.FC<AddVideoFormProps> = ({ open, onClose, initialData }) => {
+  const Regions = useRegions();
+  const Types = useTypes();
+  const Channels = useChannels();
+  const Languages = useLanguages();
+  const { t } = useTranslation();
   const [uploading, setUploading] = useState('' as string);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadedFile, setUploadedFile] = useState(null as null | FileInfo);
@@ -51,24 +57,24 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ open, onClose, initialData 
     mutationFn: addVideo,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [SelectAllVideos] });
-      showNotification('Video added successfully', 'success');
+      showNotification(t('Video added successfully'), 'success');
       reset({});
       onClose();
     },
     onError: () => {
-      showNotification('Failed to add video', 'error');
+      showNotification(t('Failed to add video'), 'error');
     },
   });
   const { isPending: isUpdating, mutate: mutateUpdate } = useMutation({
     mutationFn: updateVideo,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [SelectAllVideos] });
-      showNotification('Video updated successfully', 'success');
+      showNotification(t('Video updated successfully'), 'success');
       reset({});
       onClose();
     },
     onError: () => {
-      showNotification('Failed to update video', 'error');
+      showNotification(t('Failed to update video'), 'error');
     },
   });
 
@@ -94,9 +100,9 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ open, onClose, initialData 
           }
         });
         setUploadedFile(response);
-        showNotification('File uploaded successfully', 'success');
+        showNotification(t('File uploaded successfully'), 'success');
       } catch (error) {
-        showNotification('Failed to upload file', 'error');
+        showNotification(t('Failed to upload file'), 'error');
       } finally {
         setUploading('');
       }
@@ -130,18 +136,18 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ open, onClose, initialData 
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{initialData ? 'Edit Video' : 'Add New Video'}</DialogTitle>
+      <DialogTitle>{initialData ? t('Edit Video') : t('Add New Video')}</DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Controller
             name="videoName"
             control={control}
             defaultValue=""
-            rules={{ required: 'Video name is required' }}
+            rules={{ required: t('This field is required!') }}
             render={({ field }) => (
               <TextField
                 {...field}
-                label="Video Name"
+                label={t('Video Name')}
                 fullWidth
                 size="small"
                 margin="normal"
@@ -154,19 +160,19 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ open, onClose, initialData 
             name="channel"
             control={control}
             defaultValue=""
-            rules={{ required: 'Channel is required' }}
+            rules={{ required: t('This field is required!') }}
             render={({ field }) => (
               <TextField
                 {...field}
                 select
                 size="small"
-                label="Channel"
+                label={t('Channel')}
                 fullWidth
                 margin="normal"
                 error={!!errors.channel}
                 helperText={errors.channel?.message as React.ReactNode}
               >
-                {channels.map((item) => (
+                {Channels.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
                     {item.label}
                   </MenuItem>
@@ -178,19 +184,19 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ open, onClose, initialData 
             name="type"
             control={control}
             defaultValue=""
-            rules={{ required: 'Type is required' }}
+            rules={{ required: t('This field is required!') }}
             render={({ field }) => (
               <TextField
                 {...field}
                 select
                 size="small"
-                label="Type"
+                label={t('Type')}
                 fullWidth
                 margin="normal"
                 error={!!errors.type}
                 helperText={errors.type?.message as React.ReactNode}
               >
-                {types.map((item) => (
+                {Types.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
                     {item.label}
                   </MenuItem>
@@ -203,13 +209,13 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ open, onClose, initialData 
             control={control}
             defaultValue=""
             rules={{
-              required: 'Year is required',
+              required: t('This field is required!'),
             }}
             render={({ field }) => (
               <TextField
                 {...field}
                 type="number"
-                label="Year"
+                label={t('Year')}
                 fullWidth
                 size="small"
                 margin="normal"
@@ -222,19 +228,19 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ open, onClose, initialData 
             name="region"
             control={control}
             defaultValue=""
-            rules={{ required: 'Region is required' }}
+            rules={{ required: t('This field is required!') }}
             render={({ field }) => (
               <TextField
                 {...field}
                 select
                 size="small"
-                label="Region"
+                label={t('Region')}
                 fullWidth
                 margin="normal"
                 error={!!errors.region}
                 helperText={errors.region?.message as React.ReactNode}
               >
-                {regions.map((item) => (
+                {Regions.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
                     {item.label}
                   </MenuItem>
@@ -246,19 +252,19 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ open, onClose, initialData 
             name="language"
             control={control}
             defaultValue=""
-            rules={{ required: 'Language is required' }}
+            rules={{ required: t('This field is required!') }}
             render={({ field }) => (
               <TextField
                 {...field}
                 select
                 size="small"
-                label="Language"
+                label={t('Language')}
                 fullWidth
                 margin="normal"
                 error={!!errors.language}
                 helperText={errors.language?.message as React.ReactNode}
               >
-                {languages.map((item) => (
+                {Languages.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
                     {item.label}
                   </MenuItem>
@@ -270,13 +276,13 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ open, onClose, initialData 
             name="intro"
             control={control}
             defaultValue=""
-            rules={{ required: 'Introduction is required' }}
+            rules={{ required: t('This field is required!') }}
             render={({ field }) => (
               <TextField
                 {...field}
                 multiline
                 rows={4}
-                label="Introduction"
+                label={t('Introduction')}
                 fullWidth
                 size="small"
                 margin="normal"
@@ -301,7 +307,7 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ open, onClose, initialData 
                 disabled={!!uploading}
                 sx={{ mr: 2, mb: 2 }}
               >
-                {uploadedFile ? `Change File` : 'Upload File'}
+                {uploadedFile ? t('Change File') : t('Upload File')}
               </Button>
             </label>
 
@@ -326,7 +332,7 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ open, onClose, initialData 
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="error">
-          Cancel
+          {t('Cancel')}
         </Button>
         <Box sx={{ m: 1, position: 'relative' }}>
           <Button onClick={handleSubmit(onSubmit)} disabled={isAdding || isUpdating || !!uploading}>

@@ -12,7 +12,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <NotificationProvider>
     <HelmetProvider>
       <BrowserRouter>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense>
           <App />
         </Suspense>
       </BrowserRouter>

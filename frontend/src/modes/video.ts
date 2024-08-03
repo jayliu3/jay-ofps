@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { Dict } from 'src/utils/format-dicts';
 
 import { FileInfo } from './fileInfo';
@@ -15,39 +17,62 @@ export interface Video {
   fileInfo: FileInfo;
 }
 
-export const types: Dict[] = [
-  { id: '1', label: '喜剧' },
-  { id: '2', label: '爱情' },
-  { id: '3', label: '恐怖' },
-  { id: '4', label: '科幻' },
-  { id: '5', label: '动作' },
-  { id: '6', label: '战争' },
-  { id: '7', label: '其他' },
-];
+export const useTypes = (): Dict[] => {
+  const { t } = useTranslation();
+  return [
+    { id: '1', label: t('Comedy') },
+    { id: '2', label: t('Romance') },
+    { id: '3', label: t('Horror') },
+    { id: '4', label: t('Science Fiction') },
+    { id: '5', label: t('Action') },
+    { id: '6', label: t('War') },
+    { id: '7', label: t('Adventure') },
+    { id: '8', label: t('Disaster') },
+    { id: '9', label: t('Drama') },
+    { id: '10', label: t('Crime') },
+    { id: '11', label: t('Other') },
+  ];
+};
 
-export const channels: Dict[] = [
-  { id: '1', label: '电影' },
-  { id: '2', label: '戏剧' },
-  { id: '3', label: '动漫' },
-  { id: '4', label: '电视剧' },
-  { id: '5', label: '其他' },
-];
+export const useChannels = (): Dict[] => {
+  const { t } = useTranslation();
+  return [
+    { id: '1', label: t('Movie') },
+    { id: '2', label: t('TV Show') },
+    { id: '3', label: t('Animation') },
+    { id: '4', label: t('Variety Show') },
+    { id: '5', label: t('Sports') },
+    { id: '6', label: t('Documentary') },
+    { id: '7', label: t('Music') },
+    { id: '8', label: t('News') },
+    { id: '9', label: t('Other') },
+  ];
+};
 
-export const regions: Dict[] = [
-  { id: '1', label: '中国' },
-  { id: '2', label: '美国' },
-  { id: '3', label: '法国' },
-  { id: '4', label: '日本' },
-  { id: '5', label: '韩国' },
-  { id: '6', label: '其他' },
-];
+export const useRegions = (): Dict[] => {
+  const { t } = useTranslation();
+  return [
+    { id: '1', label: t('China') },
+    { id: '2', label: t('USA') },
+    { id: '3', label: t('France') },
+    { id: '4', label: t('Japan') },
+    { id: '5', label: t('South Korea') },
+    { id: '6', label: t('Thailand') },
+    { id: '7', label: t('Germany') },
+    { id: '8', label: t('India') },
+    { id: '9', label: t('Other') },
+  ];
+};
 
-export const languages: Dict[] = [
-  { id: '1', label: '汉语' },
-  { id: '2', label: '英语' },
-  { id: '3', label: '汉语' },
-  { id: '4', label: '日语' },
-  { id: '5', label: '法语' },
-  { id: '6', label: '德语' },
-  { id: '7', label: '其他' },
-];
+export const useLanguages = (): Dict[] => {
+  const { t } = useTranslation();
+  return [
+    { id: '1', label: t('Mandarin') },
+    { id: '2', label: t('English') },
+    { id: '3', label: t('Cantonese') },
+    { id: '4', label: t('Japanese') },
+    { id: '5', label: t('French') },
+    { id: '6', label: t('German') },
+    { id: '7', label: t('Other') },
+  ];
+};

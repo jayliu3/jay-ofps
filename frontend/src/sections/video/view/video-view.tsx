@@ -1,4 +1,5 @@
 import { format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 import { useState, useEffect, ChangeEvent } from 'react';
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 
@@ -40,7 +41,7 @@ import { SelectAllVideos } from 'src/utils/string-pool';
 
 import { pages } from 'src/modes/pages';
 import { getVideos, deleteVideos } from 'src/api/video-service';
-import { Video, types, regions, channels, languages } from 'src/modes/video';
+import { Video, useTypes, useRegions, useChannels, useLanguages } from 'src/modes/video';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -50,6 +51,11 @@ import AddVideoForm from '../add-video-form';
 import VideosFilters from '../video-filters';
 
 export default function VideosPage() {
+  const Regions = useRegions();
+  const Types = useTypes();
+  const Channels = useChannels();
+  const Languages = useLanguages();
+  const { t } = useTranslation();
   const [order, setOrder] = useState('desc');
   const [orderBy, setOrderBy] = useState('CreateTime');
   const [selectedAll, setSelectedAll] = useState([] as Array<number>);
@@ -57,14 +63,14 @@ export default function VideosPage() {
   const { showNotification } = useNotification();
 
   const headLabel = [
-    { id: 'Id', label: 'Id' },
-    { id: 'VideoName', label: 'VideoName', minWidth: 180 },
-    { id: 'Channel', label: 'Channel', minWidth: 60 },
-    { id: 'Type', label: 'Type', minWidth: 60 },
-    { id: 'Year', label: 'Year', minWidth: 60 },
-    { id: 'Region', label: 'Region', minWidth: 60 },
-    { id: 'Language', label: 'Language', minWidth: 60 },
-    { id: 'CreateTime', label: 'CreateTime', minWidth: 180, align: 'center', width: 180 },
+    { id: 'Id', label: t('ID') },
+    { id: 'VideoName', label: t('VideoName'), minWidth: 180 },
+    { id: 'Channel', label: t('Channel'), minWidth: 60 },
+    { id: 'Type', label: t('Type'), minWidth: 60 },
+    { id: 'Year', label: t('Year'), minWidth: 60 },
+    { id: 'Region', label: t('Region'), minWidth: 60 },
+    { id: 'Language', label: t('Language'), minWidth: 60 },
+    { id: 'CreateTime', label: t('CreateTime'), minWidth: 180, align: 'center', width: 180 },
     { id: '' },
   ];
 
@@ -186,12 +192,12 @@ export default function VideosPage() {
     mutateDelete(deleteIds, {
       onSuccess: ({ deletedIds }) => {
         handleCloseDialog();
-        showNotification('删除成功', 'success');
+        showNotification(t('successfully delete'), 'success');
         const updatedSelectedAll = selectedAll.filter((id) => !deletedIds.includes(id));
         setSelectedAll(updatedSelectedAll);
       },
       onError: () => {
-        showNotification('删除失败', 'error');
+        showNotification(t('failed to delete'), 'error');
       },
     });
   };
@@ -212,14 +218,14 @@ export default function VideosPage() {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
-        <Typography variant="h4">Videos</Typography>
+        <Typography variant="h4">{t('Video')}</Typography>
         <Button
           variant="contained"
           color="primary"
           startIcon={<Iconify icon="material-symbols:add" />}
           onClick={() => handleOpenEdit()}
         >
-          Add
+          {t('Add')}
         </Button>
       </Stack>
 
@@ -238,14 +244,14 @@ export default function VideosPage() {
         >
           {selectedAll.length > 0 ? (
             <Typography component="div" variant="subtitle1">
-              {selectedAll.length} selected
+              {selectedAll.length} {t('selected')}
             </Typography>
           ) : (
             <OutlinedInput
               size="small"
               value={filterName}
               onChange={(e) => handleFilterByName(e)}
-              placeholder="Search"
+              placeholder={t('Search')}
               startAdornment={
                 <InputAdornment position="start">
                   <Iconify
@@ -356,11 +362,11 @@ export default function VideosPage() {
                           <Typography component="span">{row.videoName}</Typography>
                         </LightTooltip>
                       </TableCell>
-                      <TableCell>{getLabelById(channels, row.channel)}</TableCell>
-                      <TableCell>{getLabelById(types, row.type)}</TableCell>
+                      <TableCell>{getLabelById(Channels, row.channel)}</TableCell>
+                      <TableCell>{getLabelById(Types, row.type)}</TableCell>
                       <TableCell>{row.year}</TableCell>
-                      <TableCell>{getLabelById(regions, row.region)}</TableCell>
-                      <TableCell>{getLabelById(languages, row.language)}</TableCell>
+                      <TableCell>{getLabelById(Regions, row.region)}</TableCell>
+                      <TableCell>{getLabelById(Languages, row.language)}</TableCell>
                       <TableCell align="center">
                         {format(new Date(row.createTime), 'yyyy-MM-dd HH:mm:ss')}
                       </TableCell>
@@ -381,10 +387,10 @@ export default function VideosPage() {
                         }}
                       >
                         <Typography variant="h6" paragraph>
-                          Not found
+                          {t('Not found')}
                         </Typography>
 
-                        <Typography variant="body2">No results found.</Typography>
+                        <Typography variant="body2">{t('No results found.')}</Typography>
                       </Paper>
                     </TableCell>
                   </TableRow>
@@ -398,7 +404,7 @@ export default function VideosPage() {
                         }}
                       >
                         <Typography variant="h6" paragraph>
-                          Loading...
+                          {t('Loading...')}
                         </Typography>
                       </Paper>
                     </TableCell>
@@ -413,7 +419,7 @@ export default function VideosPage() {
                         }}
                       >
                         <Typography variant="h6" paragraph>
-                          Error
+                          {t('Error')}
                         </Typography>
                       </Paper>
                     </TableCell>
@@ -439,17 +445,17 @@ export default function VideosPage() {
         <DialogContent>
           <DialogContentText>
             <Typography sx={{ mx: { md: 10, xs: 2 } }} variant="body1">
-              Are you sure to delete?
+              {t('Are you sure to delete?')}
             </Typography>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={(e) => handleCloseDialog(e)} color="primary" autoFocus>
-            Cancel
+            {t('Cancel')}
           </Button>
           <Box sx={{ m: 1, position: 'relative' }}>
             <Button onClick={handleConfirmDelete} color="error" disabled={isPending}>
-              Delete
+              {t('Delete')}
             </Button>
             {isPending && (
               <CircularProgress
@@ -480,11 +486,11 @@ export default function VideosPage() {
       >
         <MenuItem onClick={() => handleOpenEdit(videos.find((item) => item.id === MenuId))}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
-          Edit
+          {t('Edit')}
         </MenuItem>
         <MenuItem onClick={() => handleDeleteMenu([MenuId])} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
-          Delete
+          {t('Delete')}
         </MenuItem>
       </Popover>
       <AddVideoForm
