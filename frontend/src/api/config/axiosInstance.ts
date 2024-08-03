@@ -2,7 +2,7 @@ import qs from 'qs';
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5062/api',
+  baseURL: `${import.meta.env.VITE_BASE_URL}/api`,
   headers: {
     'Content-Type': 'application/json; charset=utf-8 ',
   },

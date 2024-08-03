@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5602
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=Ofps;User=sa;Password=Passw0rd!@Ofps;TrustServerCertificate=true;
+      - VITE_BASE_URL=http://localhost:8080/api
