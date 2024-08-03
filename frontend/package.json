@@ -27,7 +27,6 @@
     "@mui/lab": "^5.0.0-alpha.147",
     "@mui/material": "^5.14.12",
     "@tanstack/react-query": "^5.50.1",
-    "@tanstack/react-query-devtools": "^5.50.1",
     "apexcharts": "^3.43.0",
     "axios": "^1.7.2",
     "date-fns": "^2.30.0",
@@ -48,8 +47,7 @@
     "react-router-dom": "^6.16.0",
     "react-swipeable-views": "^0.14.0",
     "react-swipeable-views-utils": "^0.14.0",
-    "simplebar-react": "^3.2.4",
-    "svg-country-flags": "^1.2.10"
+    "simplebar-react": "^3.2.4"
   },
   "devDependencies": {
     "@types/node": "^20.14.9",

@@ -633,18 +633,6 @@
   resolved "https://registry.npmjs.org/@tanstack/query-core/-/query-core-5.50.1.tgz"
   integrity sha512-lpfhKPrJlyV2DSVcQb/HuozH3Av3kws4ge22agx+lNGpFkS4vLZ7St0l3GLwlAD+bqB+qXGex3JdRKUNtMviEQ==
 
-"@tanstack/query-devtools@5.50.1":
-  version "5.50.1"
-  resolved "https://registry.npmjs.org/@tanstack/query-devtools/-/query-devtools-5.50.1.tgz"
-  integrity sha512-MQ5JK3yRwBP1SRuwoJVPGZP4cMLXCQ0t+6blDbcAVGEoqrEuvbgTdwlN729AKBR0hidOWPFR9n5YpI2Y8bBZOQ==
-
-"@tanstack/react-query-devtools@^5.50.1":
-  version "5.50.1"
-  resolved "https://registry.npmjs.org/@tanstack/react-query-devtools/-/react-query-devtools-5.50.1.tgz"
-  integrity sha512-zgPmEFv9GhLAx6eaf9r0ACbcxit1ZSuv/uPpOXBTTSPLijlWcfpQTOdZx0jYQ14t2cUfWjrAW41cUmcCvT4X/g==
-  dependencies:
-    "@tanstack/query-devtools" "5.50.1"
-
 "@tanstack/react-query@^5.50.1":
   version "5.50.1"
   resolved "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.50.1.tgz"
@@ -3423,11 +3411,6 @@ supports-preserve-symlinks-flag@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
-
-svg-country-flags@^1.2.10:
-  version "1.2.10"
-  resolved "https://registry.yarnpkg.com/svg-country-flags/-/svg-country-flags-1.2.10.tgz#b1b94e9f08f065d7b3d0ff9ab359898edd4dd3b0"
-  integrity sha512-xrqwo0TYf/h2cfPvGpjdSuSguUbri4vNNizBnwzoZnX0xGo3O5nGJMlbYEp7NOYcnPGBm6LE2axqDWSB847bLw==
 
 svg.draggable.js@^2.2.2:
   version "2.2.2"
