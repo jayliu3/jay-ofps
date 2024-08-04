@@ -1,8 +1,12 @@
 version: '3.8'
 
 services:
-  app:
-    build: .
+  ofps-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: liujia674/jay-ofps-app:latest
+    container_name: ofps-app
     ports:
       - "8080:80"
     environment:
@@ -10,3 +14,24 @@ services:
       - ASPNETCORE_URLS=http://+:5602
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=Ofps;User=sa;Password=Passw0rd!@Ofps;TrustServerCertificate=true;
       - VITE_BASE_URL=http://localhost:8080/api
+    restart: unless-stopped
+    depends_on:
+      - sqlserver
+    networks:
+      - ofps_app_net
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver
+    # volumes:
+    #   - D:\development\docker_desktop\data\mssql:/var/opt/mssql
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Passw0rd!@Ofps
+    restart: unless-stopped
+    networks:
+      - ofps_app_net
+networks:
+  ofps_app_net:
+    driver: bridge
