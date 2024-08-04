@@ -6,7 +6,7 @@
 
 ## Overview
 
-This project is a customized development based on the minimal-ui-kit (Free version). It offers a simple and intuitive admin dashboard interface that facilitates rapid backend customization and development.
+This project is a customized development based on the [minimal-ui-kit (Free version)](https://github.com/minimal-ui-kit/material-kit-react). It offers a simple and intuitive admin dashboard interface that facilitates rapid backend customization and development.
 
 ### Key Features
 
