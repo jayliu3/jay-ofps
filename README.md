@@ -2,7 +2,7 @@
 
 ### Simple and Intuitive Admin Dashboard Interface
 
-[![Project Image](path-to-image)](path-to-image)
+[![Project Image](img/ProjectImage.png)](img/ProjectImage.png)
 
 ## Overview
 
@@ -29,8 +29,8 @@ This project is a customized development based on the minimal-ui-kit (Free versi
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/yourusername/your-repo-name.git
-   cd your-repo-name
+   git clone https://github.com/jayliu3/jay-ofps.git
+   cd jay-ofps
    ```
 
 2. **Start the Services**

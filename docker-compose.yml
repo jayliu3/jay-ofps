@@ -22,8 +22,8 @@ services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2019-latest
     container_name: sqlserver
-    # volumes:
-    #   - D:\development\docker_desktop\data\mssql:/var/opt/mssql
+    volumes:
+      - D:\development\docker_desktop\data\mssql:/var/opt/mssql
     ports:
       - "1433:1433"
     environment:
