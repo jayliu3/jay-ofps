@@ -1,20 +1,20 @@
-FROM node:18 AS frontend-builder
-ARG VITE_BASE_URL
-ENV VITE_BASE_URL=$VITE_BASE_URL
+FROM --platform=$TARGETPLATFORM node:18 AS frontend-builder
 WORKDIR /app/frontend
 COPY frontend/package.json frontend/yarn.lock ./
-RUN yarn install
+RUN yarn install 
+#RUN npm install  --legacy-peer-deps
 COPY frontend ./
 RUN yarn build
+#RUN npm run build
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS backend-builder
+FROM --platform=$TARGETPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS backend-builder
 WORKDIR /app/backend
 COPY backend/*.csproj ./
 RUN dotnet restore
 COPY backend ./
 RUN dotnet publish ofps.csproj -c Release -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM --platform=$TARGETPLATFORM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y nginx && apt-get clean
