@@ -51,6 +51,10 @@ This project is a customized development based on the [minimal-ui-kit (Free vers
 
 - Open your browser and navigate to `http://localhost:8080`.
 
+### Demo
+
+- `http://138.2.113.17:8001/`
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) file for details.
