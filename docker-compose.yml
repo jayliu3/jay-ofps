@@ -5,7 +5,7 @@ services:
     image: liujia674/jay-ofps-app:latest
     container_name: ofps-app
     ports:
-      - "8080:80"
+      - "8080:8080"
     environment:
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=Ofps;User=sa;Password=Passw0rd!@Ofps;TrustServerCertificate=true;
     restart: no

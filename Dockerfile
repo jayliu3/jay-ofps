@@ -27,5 +27,5 @@ COPY --from=frontend-builder /app/frontend/dist /usr/share/nginx/html
 ENV ASPNETCORE_URLS=http://+:5602
 ENV ASPNETCORE_ENVIRONMENT=Production
 
-EXPOSE 80
+EXPOSE 8080
 CMD service nginx start && dotnet ofps.dll
