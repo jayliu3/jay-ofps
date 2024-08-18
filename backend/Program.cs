@@ -30,9 +30,11 @@ builder.WebHost.ConfigureKestrel(options =>
 });
 
 // Add database context
-builder.Services.AddDbContext<AppDbContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-                      .LogTo(Console.WriteLine, LogLevel.Information)); // Enable logging to console
+builder.Services.AddDbContextPool<AppDbContext>(
+    options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+           .LogTo(Console.WriteLine, LogLevel.Information)// Enable logging to console
+);
 
 var app = builder.Build();
 
